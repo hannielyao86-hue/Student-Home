@@ -26,8 +26,10 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>25</javafx.version>
     </properties>
 
+<<<<<<< HEAD
     <!--
          DÉPENDANCES
          Ce sont les bibliothèques externes dont
@@ -39,20 +41,28 @@
              Fournit les composants visuels :
              Button, TextField, TableView, etc.
          -->
+=======
+    <dependencies>
+        <!-- JavaFX pour l'interface graphique -->
+>>>>>>> feature/gestion_logement_hanniel
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+<<<<<<< HEAD
 
         <!--  JavaFX FXML
              Permet de charger les fichiers .fxml
              qui décrivent l'interface graphique -->
+=======
+>>>>>>> feature/gestion_logement_hanniel
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
+<<<<<<< HEAD
 
         <!-- MySQL Connector JDBC
              Permet à Java de se connecter à MySQL.
@@ -127,6 +137,21 @@
                 <version>3.1.2</version>
             </plugin>
 
+=======
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <source>25</source>
+                    <target>25</target>
+                </configuration>
+            </plugin>
+>>>>>>> feature/gestion_logement_hanniel
         </plugins>
     </build>
 
