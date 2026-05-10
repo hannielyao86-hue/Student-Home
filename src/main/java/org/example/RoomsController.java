@@ -93,7 +93,6 @@ public class RoomsController implements Initializable {
     /**
      * Charge les données d'exemple des chambres
      * Ces données sont fictives et serviront pour la démonstration
-     * (La vraie base de données sera intégrée plus tard)
      */
     private void loadSampleData() {
         // Chambre A001 - Occupée
