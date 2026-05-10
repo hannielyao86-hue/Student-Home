@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.example.controller.LoginController"
+      spacing="15"
+      alignment="CENTER"
+      style="-fx-padding: 30; -fx-background-color: #2c3e50;">
+
+    <!-- TITRE -->
+    <Label text="Connexion"
+           style="-fx-text-fill: white; -fx-font-size: 24px;" />
+
+    <!-- EMAIL -->
+    <TextField fx:id="emailField"
+               promptText="Email"
+               maxWidth="250" />
+
+    <!-- MOT DE PASSE -->
+    <PasswordField fx:id="passwordField"
+                   promptText="Mot de passe"
+                   maxWidth="250" />
+
+    <!-- MESSAGE ERREUR -->
+    <Label fx:id="messageLabel"
+           textFill="red" />
+
+    <!-- BOUTON LOGIN -->
+    <Button text="Se connecter"
+            fx:id="loginButton"
+            onAction="#handleLogin"
+            style="-fx-background-color: #27ae60; -fx-text-fill: white;"
+            maxWidth="250"/>
+
+</VBox>
