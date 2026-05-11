@@ -91,34 +91,49 @@
             <HBox spacing="20">
 
                 <!-- Carte : nombre d'étudiants -->
-                <VBox style="-fx-background-color: #3498db; -fx-padding: 20; -fx-background-radius: 10;"
-                      prefWidth="200" prefHeight="100">
-                    <Label text="Étudiants"
-                           style="-fx-text-fill: white; -fx-font-size: 14px;"/>
-                    <Label fx:id="nbEtudiantsLabel"
-                           text="0"
-                           style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
-                </VBox>
+                <Button onAction="#handleEtudiants"
+                        style="-fx-background-color: #3498db; -fx-padding: 0; -fx-background-radius: 10; -fx-text-fill: white;"
+                        prefWidth="200" prefHeight="100">
+                    <graphic>
+                        <VBox spacing="10" style="-fx-padding: 20;" alignment="TOP_LEFT">
+                            <Label text="Étudiants"
+                                   style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                            <Label fx:id="nbEtudiantsLabel"
+                                   text="0"
+                                   style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        </VBox>
+                    </graphic>
+                </Button>
 
                 <!-- Carte : logements disponibles -->
-                <VBox style="-fx-background-color: #27ae60; -fx-padding: 20; -fx-background-radius: 10;"
-                      prefWidth="200" prefHeight="100">
-                    <Label text="Logements disponibles"
-                           style="-fx-text-fill: white; -fx-font-size: 14px;"/>
-                    <Label fx:id="nbLogementsLabel"
-                           text="0"
-                           style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
-                </VBox>
+                <Button onAction="#handleLogements"
+                        style="-fx-background-color: #27ae60; -fx-padding: 0; -fx-background-radius: 10; -fx-text-fill: white;"
+                        prefWidth="200" prefHeight="100">
+                    <graphic>
+                        <VBox spacing="10" style="-fx-padding: 20;" alignment="TOP_LEFT">
+                            <Label text="Logements disponibles"
+                                   style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                            <Label fx:id="nbLogementsLabel"
+                                   text="0"
+                                   style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        </VBox>
+                    </graphic>
+                </Button>
 
                 <!-- Carte : incidents en cours -->
-                <VBox style="-fx-background-color: #e74c3c; -fx-padding: 20; -fx-background-radius: 10;"
-                      prefWidth="200" prefHeight="100">
-                    <Label text="Incidents en cours"
-                           style="-fx-text-fill: white; -fx-font-size: 14px;"/>
-                    <Label fx:id="nbIncidentsLabel"
-                           text="0"
-                           style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
-                </VBox>
+                <Button onAction="#handleIncidents"
+                        style="-fx-background-color: #e74c3c; -fx-padding: 0; -fx-background-radius: 10; -fx-text-fill: white;"
+                        prefWidth="200" prefHeight="100">
+                    <graphic>
+                        <VBox spacing="10" style="-fx-padding: 20;" alignment="TOP_LEFT">
+                            <Label text="Incidents en cours"
+                                   style="-fx-text-fill: white; -fx-font-size: 14px;"/>
+                            <Label fx:id="nbIncidentsLabel"
+                                   text="0"
+                                   style="-fx-text-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        </VBox>
+                    </graphic>
+                </Button>
 
             </HBox>
 

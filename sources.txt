@@ -1,0 +1,12 @@
+C:\wamp64\www\student-home\src\main\java\org\example\Main.java
+C:\wamp64\www\student-home\src\main\java\org\example\MainApp.java
+C:\wamp64\www\student-home\src\main\java\org\example\config\DatabaseConnection.java
+C:\wamp64\www\student-home\src\main\java\org\example\controller\DashboardController.java
+C:\wamp64\www\student-home\src\main\java\org\example\controller\LoginController.java
+C:\wamp64\www\student-home\src\main\java\org\example\dao\UserDAO.java
+C:\wamp64\www\student-home\src\main\java\org\example\model\User.java
+C:\wamp64\www\student-home\src\main\java\org\example\service\AuthService.java
+C:\wamp64\www\student-home\src\main\java\org\example\tests\TestBCrypt.java
+C:\wamp64\www\student-home\src\main\java\org\example\tests\TestConnexion.java
+C:\wamp64\www\student-home\src\main\java\org\example\tests\TestLogin.java
+C:\wamp64\www\student-home\src\main\java\org\example\utils\PasswordUtil.java

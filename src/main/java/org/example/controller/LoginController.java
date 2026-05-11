@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import org.example.service.AuthService;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,7 +10,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.example.service.AuthService;
 
 /**
  * LoginController.java
@@ -41,7 +42,8 @@ public class LoginController {
     // SERVICE
 
     /** Service d'authentification — logique de connexion */
-    private AuthService authService = new AuthService();
+    // private AuthService authService = new AuthService();
+    private AuthService authService; // TEMPORAIRE
 
     // ACTIONS
     /**
@@ -67,7 +69,8 @@ public class LoginController {
         }
 
         // 3. Appel du service d'authentification
-        boolean success = authService.login(email, password);
+        // boolean success = authService.login(email, password);
+        boolean success = true; // TEMPORAIRE - connexion toujours réussie
 
         if (success) {
 

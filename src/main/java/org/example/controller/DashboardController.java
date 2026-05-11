@@ -1,12 +1,13 @@
 package org.example.controller;
 
+import org.example.model.User;
+import org.example.service.AuthService;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import org.example.model.User;
-import org.example.service.AuthService;
 
 /**
  * DashboardController.java
@@ -59,6 +60,10 @@ public class DashboardController {
 
             // Afficher le rôle (on affichera le nom du rôle plus tard)
             roleLabel.setText("Rôle ID : " + user.getRoleId());
+        } else {
+            // Valeurs par défaut pour les tests
+            nomUserLabel.setText("Test User");
+            roleLabel.setText("Rôle ID : 1");
         }
 
         // Statistiques — valeurs à 0 pour l'instant
@@ -117,8 +122,19 @@ public class DashboardController {
      */
     @FXML
     public void handleLogements() {
-        System.out.println("→ Module Logements (Sprint 2)");
-        // TODO : charger logements.fxml
+        System.out.println("→ Clic sur Logements - Chargement de la page...");
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/logements.fxml")
+            );
+            Stage stage = (Stage) nomUserLabel.getScene().getWindow();
+            stage.setScene(new Scene(loader.load()));
+            stage.setMaximized(true);
+            System.out.println("✅ Page logements chargée avec succès");
+        } catch (Exception e) {
+            System.out.println("❌ Erreur chargement logements : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /**
