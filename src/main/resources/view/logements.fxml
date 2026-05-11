@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?> <BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.LogementsController"
+            style="-fx-background-color: #ecf0f1;">
+
+    <left>
+        <VBox spacing="10"
+              style="-fx-background-color: #2c3e50; -fx-padding: 20;">
+
+            <Label text="Smart Student"
+                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+            <Label text="Residence"
+                   style="-fx-text-fill: #27ae60; -fx-font-size: 14px;"/>
+            <Separator style="-fx-background-color: #7f8c8d;"/>
+            <Label fx:id="nomUserLabel" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+            <Label fx:id="roleLabel" style="-fx-text-fill: #27ae60; -fx-font-size: 11px;"/>
+            <Separator style="-fx-background-color: #7f8c8d;"/>
+
+            <Button text="🏠  Dashboard" prefWidth="180" onAction="#handleDashboard"
+                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="👤  Etudiants" prefWidth="180" onAction="#handleEtudiants"
+                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="🛏  Logements" prefWidth="180"
+                    style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+            <Button text="💰  Paiements" prefWidth="180" onAction="#handlePaiements"
+                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="🔧  Incidents" prefWidth="180" onAction="#handleIncidents"
+                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+            <Button text="🚪  Deconnexion" fx:id="logoutButton" onAction="#handleLogout"
+                    prefWidth="180" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 24;">
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="Rooms" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <TextField promptText="Rechercher..." prefWidth="260"
+                           style="-fx-background-radius: 999; -fx-background-color: white; -fx-border-color: transparent; -fx-padding: 10 16;"/>
+                <Button text="🔔" style="-fx-background-color: white; -fx-background-radius: 999; -fx-padding: 10; -fx-border-color: transparent;"/>
+            </HBox>
+
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                <FlowPane hgap="20" vgap="20" prefWrapLength="920">
+                    <padding>
+                        <Insets top="0" right="0" bottom="0" left="0"/> </padding>
+
+                    <!-- Étage A -->
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #ff4c4c, #e74c3c); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Occupe" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="0" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="A101" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="A102" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #f39c12, #f1c40f); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Reserve" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="1" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="A103" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="A104" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #ff6b6b, #ff9a9e); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Occupe" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="0" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="A105" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Étage B -->
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="B101" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #ff4c4c, #e74c3c); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Occupe" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="0" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="B102" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #f39c12, #f1c40f); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Reserve" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="1" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="B103" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="B104" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #ff6b6b, #ff9a9e); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Occupe" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="0" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="B105" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Étage C -->
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #f39c12, #f1c40f); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Reserve" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="1" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="C101" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="C102" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #ff4c4c, #e74c3c); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Occupe" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="0" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="C103" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="C104" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #f39c12, #f1c40f); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Reserve" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="1" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="C105" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <!-- Étage D -->
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #ff6b6b, #ff9a9e); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Occupe" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="0" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="D101" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="D102" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #f39c12, #f1c40f); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Reserve" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="1" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="D103" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #ff4c4c, #e74c3c); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Occupe" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="0" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="D104" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Double" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    <Button onAction="#handleRoomClick"
+                            style="-fx-background-color: linear-gradient(to bottom, #27ae60, #2ecc71); -fx-background-radius: 18; -fx-text-fill: white; -fx-padding: 0;"
+                            prefWidth="220" prefHeight="160">
+                        <graphic>
+                            <VBox spacing="10" style="-fx-padding: 18;" alignment="TOP_LEFT">
+                                <HBox alignment="CENTER_LEFT" spacing="8">
+                                    <Label text="Libre" style="-fx-font-size: 12px; -fx-font-weight: bold;"/>
+                                    <Region HBox.hgrow="ALWAYS"/>
+                                    <Label text="2" style="-fx-font-size: 12px;"/>
+                                </HBox>
+                                <Label text="D105" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
+                                <Label text="Single" style="-fx-font-size: 13px;"/>
+                            </VBox>
+                        </graphic>
+                    </Button>
+
+                    </FlowPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+
+    <right>
+        <VBox spacing="18" prefWidth="360"
+              style="-fx-padding: 20; -fx-background-color: white; -fx-border-color: #dfe6e9; -fx-border-width: 0 0 0 1;">
+            <Pane style="-fx-background-color: linear-gradient(to bottom, #ffffff, #f8fbfd); -fx-background-radius: 18;"
+                  prefHeight="210">
+                <Label text="Image chambre" layoutX="18" layoutY="18" style="-fx-text-fill: #7f8c8d;"/>
+            </Pane>
+            <VBox spacing="8">
+                <Label fx:id="roomTitleLabel" text="Chambre Sélectionnée" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+                <Label fx:id="roomResidentLabel" text="Statut du logement" style="-fx-font-size: 14px; -fx-text-fill: #7f8c8d;"/>
+                <Label fx:id="roomNomLabel" text="Aucun résident sélectionné" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Contact:" style="-fx-text-fill: #7f8c8d;"/>
+                    <Label fx:id="roomContactLabel" text="--" style="-fx-font-size: 14px;"/>
+                </HBox>
+            </VBox>
+            <Separator/>
+            <VBox spacing="10">
+                <HBox spacing="16">
+                    <VBox spacing="4">
+                        <Label text="Contract du" style="-fx-text-fill: #7f8c8d;"/>
+                        <Label fx:id="contractStartLabel" text="--" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Contract des" style="-fx-text-fill: #7f8c8d;"/>
+                        <Label fx:id="contractEndLabel" text="--" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    </VBox>
+                </HBox>
+                <HBox spacing="16" alignment="CENTER_LEFT">
+                    <VBox spacing="4">
+                        <Label text="Lease amount" style="-fx-text-fill: #7f8c8d;"/>
+                        <Label fx:id="leaseAmountLabel" text="--" style="-fx-font-size: 14px; -fx-font-weight: bold;"/>
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="roomStatusLabel" text="--"
+                           style="-fx-padding: 8 14; -fx-background-radius: 999; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                </HBox>
+            </VBox>
+            <HBox spacing="12">
+                <Button text="Modifier" onAction="#handleModifier" prefWidth="140"
+                        style="-fx-background-color: transparent; -fx-border-color: #2c3e50; -fx-border-radius: 10;"/>
+                <Button text="Générer Contrat" onAction="#handleGenererContrat" prefWidth="160"
+                        style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-border-radius: 10;"/>
+            </HBox>
+        </VBox>
+    </right>
+</BorderPane>

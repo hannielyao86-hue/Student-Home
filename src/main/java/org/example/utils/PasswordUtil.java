@@ -1,7 +1,7 @@
 
 package org.example.utils;
 
-import org.mindrot.jbcrypt.BCrypt;
+// import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Classe utilitaire pour la sécurité des mots de passe.
@@ -23,7 +23,8 @@ public class PasswordUtil {
     public static String hashPassword(String password) {
 
         // gensalt() génère automatiquement un salt sécurisé
-        return BCrypt.hashpw(password, BCrypt.gensalt());
+        // return BCrypt.hashpw(password, BCrypt.gensalt());
+        return password; // TEMPORAIRE
     }
 
     /**
@@ -35,6 +36,7 @@ public class PasswordUtil {
      */
     public static boolean checkPassword(String password, String hashedPassword) {
 
-        return BCrypt.checkpw(password, hashedPassword);
+        // return BCrypt.checkpw(password, hashedPassword);
+        return password.equals(hashedPassword); // TEMPORAIRE
     }
 }

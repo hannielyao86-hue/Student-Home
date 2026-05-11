@@ -6,8 +6,6 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-<!--         IDENTITÉ DU PROJET-->
-
     <groupId>com.smartstudent</groupId>
     <artifactId>smart-student-residence</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -16,143 +14,66 @@
     <name>Smart Student Residence</name>
     <description>Application de gestion intelligente de résidence étudiante</description>
 
-
     <properties>
         <java.version>17</java.version>
         <javafx.version>17.0.6</javafx.version>
         <mysql.version>8.0.33</mysql.version>
         <bcrypt.version>0.4</bcrypt.version>
         <junit.version>5.10.0</junit.version>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>25</javafx.version>
     </properties>
 
-<<<<<<< HEAD
-    <!--
-         DÉPENDANCES
-         Ce sont les bibliothèques externes dont
-         le projet a besoin pour fonctionner.
-         -->
     <dependencies>
-
-        <!--  JavaFX Controls
-             Fournit les composants visuels :
-             Button, TextField, TableView, etc.
-         -->
-=======
-    <dependencies>
-        <!-- JavaFX pour l'interface graphique -->
->>>>>>> feature/gestion_logement_hanniel
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-<<<<<<< HEAD
-
-        <!--  JavaFX FXML
-             Permet de charger les fichiers .fxml
-             qui décrivent l'interface graphique -->
-=======
->>>>>>> feature/gestion_logement_hanniel
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-<<<<<<< HEAD
 
-        <!-- MySQL Connector JDBC
-             Permet à Java de se connecter à MySQL.
-             C'est le "pont" entre ton code et ta BDD -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
 
-        <!--  BCrypt
-             Sert à hacher les mots de passe avant
-             de les stocker en base de données.
-             On ne stocke JAMAIS un mot de passe en clair -->
         <dependency>
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>${bcrypt.version}</version>
         </dependency>
 
-        <!-- JUnit 5
-             Framework de tests unitaires.
-             "test" = utilisé uniquement pendant les tests,
-             pas inclus dans le programme final -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
-    <!-- PLUGINS DE BUILD
-         Ces plugins configurent comment Maven
-         compile et lance le projet  -->
     <build>
         <plugins>
-
-            <!-- Plugin Compilateur Java
-                 Force l'utilisation de Java 17
-                 pour compiler le projet -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.11.0</version>
                 <configuration>
-                    <!-- release remplace source+target et évite le WARNING -->
                     <release>17</release>
                 </configuration>
             </plugin>
 
-            <!--Plugin JavaFX
-                 Permet de lancer l'application JavaFX
-                 avec la commande : mvn javafx:run
-                 mainClass = point d'entrée du programme -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.smartstudent.App</mainClass>
+                    <mainClass>org.example.MainApp</mainClass>
                 </configuration>
             </plugin>
-
-            <!-- Plugin Tests JUnit 5
-                 Permet de lancer tous les tests avec
-                 la commande : mvn test  -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-            </plugin>
-
-=======
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.10.1</version>
-                <configuration>
-                    <source>25</source>
-                    <target>25</target>
-                </configuration>
-            </plugin>
->>>>>>> feature/gestion_logement_hanniel
         </plugins>
     </build>
-
 </project>
