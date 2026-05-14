@@ -251,3 +251,48 @@ VALUES (1, 'ADMIN');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- Ajouter une résidence
+INSERT INTO residences
+(id_residence, nom_residence, adresse, capacite_totale)
+VALUES
+    (1, 'Residence A', 'Tunis', 100);
+
+-- Ajouter une chambre
+INSERT INTO rooms
+(id_room, numero_room, type_room, capaciter_room,
+ statut_room, loyer, id_residence, id_incident)
+VALUES
+    (1, 'A101', 'SIMPLE', 1,
+     'LIBRE', 500, 1, 'INC001');
+
+-- Ajouter un paiement
+INSERT INTO payments
+(id_payment, montant, date_paiement,
+ statut_paiement, penaliter)
+VALUES
+    ('PAY001', 1000,
+     '2026-05-10',
+     'PAYE',
+     0);
+
+-- Ajouter un etudiant
+INSERT INTO students
+(id_student, numero_etudiant, ecole,
+ telephone, date_entree, date_sortie, id_users)
+VALUES
+    (1,
+     'ET001',
+     'ESPRIT',
+     '12345678',
+     '2026-05-10',
+     '2027-05-10',
+     1);
+
+CREATE TABLE affectations (
+                              id INT AUTO_INCREMENT PRIMARY KEY,
+                              student_id INT NOT NULL,
+                              room_id INT NOT NULL,
+                              affectation_date DATE NOT NULL
+);
+
