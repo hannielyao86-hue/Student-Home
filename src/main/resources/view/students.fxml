@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.StudentController"
+            style="-fx-background-color: #f5f7fa;">
+
+    <!-- ================= CENTER ================= -->
+    <center>
+
+        <VBox spacing="15" style="-fx-padding: 20;">
+
+            <!-- FORM -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 15;">
+
+                <Label text="Gestion Étudiants" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+                <TextField fx:id="idField" promptText="ID (auto ou pour update/delete)"/>
+                <TextField fx:id="numeroField" promptText="Numéro étudiant"/>
+                <TextField fx:id="ecoleField" promptText="École"/>
+                <TextField fx:id="telephoneField" promptText="Téléphone"/>
+
+                <DatePicker fx:id="dateEntreePicker"/>
+                <DatePicker fx:id="dateSortiePicker"/>
+
+                <HBox spacing="10">
+
+                    <Button text="Ajouter" onAction="#handleAddStudent"/>
+                    <Button text="Modifier" onAction="#handleUpdateStudent"/>
+                    <Button text="Supprimer" onAction="#handleDeleteStudent"/>
+                    <Button text="Actualiser" onAction="#loadStudents"/>
+
+                </HBox>
+
+            </VBox>
+
+            <!-- TABLE -->
+            <TableView fx:id="studentTable">
+
+                <columns>
+
+                    <TableColumn fx:id="idColumn" text="ID"/>
+                    <TableColumn fx:id="numeroColumn" text="Numéro"/>
+                    <TableColumn fx:id="ecoleColumn" text="École"/>
+                    <TableColumn fx:id="telephoneColumn" text="Téléphone"/>
+                    <TableColumn fx:id="dateEntreeColumn" text="Entrée"/>
+                    <TableColumn fx:id="dateSortieColumn" text="Sortie"/>
+
+                </columns>
+
+            </TableView>
+
+        </VBox>
+
+    </center>
+
+</BorderPane>

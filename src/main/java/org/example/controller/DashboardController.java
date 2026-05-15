@@ -1,157 +1,335 @@
 package org.example.controller;
 
-import org.example.model.User;
-import org.example.service.AuthService;
-
+// ───────────────── IMPORTS JAVA FX ─────────────────
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+// ───────────────── IMPORTS SQL ─────────────────
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+// ───────────────── IMPORTS PROJET ─────────────────
+import org.example.config.DatabaseConnection;
+
 /**
- * DashboardController.java
+ * =========================================================
+ * DashboardController
+ * =========================================================
  *
- * Controller JavaFX du tableau de bord principal.
- * S'initialise automatiquement après le chargement du FXML.
+ * Contrôleur principal du dashboard.
  *
  * Responsabilités :
- * - afficher le nom et rôle de l'utilisateur connecté
- * - afficher les statistiques (étudiants, logements, incidents)
- * - gérer la déconnexion
+ * ✔ Charger les statistiques
+ * ✔ Naviguer entre les modules
+ * ✔ Déconnexion
+ *
+ * =========================================================
  */
 public class DashboardController {
 
-    // COMPOSANTS FXML (liés aux fx:id du dashboard.fxml)
+    // =====================================================
+    // CONNEXION MYSQL
+    // =====================================================
 
-    /** Affiche le prénom + nom de l'utilisateur connecté */
-    @FXML private Label nomUserLabel;
+    private final Connection cnx =
+            DatabaseConnection
+                    .getInstance()
+                    .getConnection();
 
-    /** Affiche le rôle de l'utilisateur connecté */
-    @FXML private Label roleLabel;
+    // =====================================================
+    // LABELS DASHBOARD
+    // =====================================================
 
-    /** Nombre d'étudiants enregistrés */
-    @FXML private Label nbEtudiantsLabel;
+    @FXML
+    private Label nomUserLabel;
 
-    /** Nombre de logements disponibles */
-    @FXML private Label nbLogementsLabel;
+    @FXML
+    private Label roleLabel;
 
-    /** Nombre d'incidents en cours */
-    @FXML private Label nbIncidentsLabel;
+    @FXML
+    private Label nbEtudiantsLabel;
 
-    // INITIALISATION AUTOMATIQUE
+    @FXML
+    private Label nbLogementsLabel;
 
-    /**
-     * Méthode appelée automatiquement par JavaFX
-     * au chargement du fichier FXML.
-     *
-     * On y récupère l'utilisateur connecté depuis la session
-     * et on remplit les labels du dashboard.
-     */
+    @FXML
+    private Label nbIncidentsLabel;
+
+    // =====================================================
+    // INITIALISATION
+    // =====================================================
+
     @FXML
     public void initialize() {
 
-        // Récupérer l'utilisateur connecté depuis AuthService
-        User user = AuthService.getCurrentUser();
+        System.out.println("→ Initialisation DashboardController");
 
-        if (user != null) {
-            // Afficher prénom + nom dans la sidebar
-            nomUserLabel.setText(user.getPrenomUser() + " " + user.getNomUsers());
+        // Charger statistiques
+        loadStats();
 
-            // Afficher le rôle (on affichera le nom du rôle plus tard)
-            roleLabel.setText("Rôle ID : " + user.getRoleId());
-        } else {
-            // Valeurs par défaut pour les tests
-            nomUserLabel.setText("Test User");
-            roleLabel.setText("Rôle ID : 1");
-        }
+        // Données utilisateur temporaires
+        nomUserLabel.setText("Admin");
+        roleLabel.setText("ADMIN");
 
-        // Statistiques — valeurs à 0 pour l'instant
-        // On les connectera à la base de données au Sprint 2
-
-        nbEtudiantsLabel.setText("0");
-        nbLogementsLabel.setText("0");
-        nbIncidentsLabel.setText("0");
+        System.out.println("✅ Dashboard chargé");
     }
 
-    // ACTIONS
+    // =====================================================
+    // CHARGER LES STATISTIQUES
+    // =====================================================
 
-    /**
-     * Gère le clic sur "Déconnexion".
-     *
-     * Étapes :
-     * 1. Appel logout() dans AuthService → vide la session
-     * 2. Retour à l'écran de login
-     */
-    @FXML
-    public void handleLogout() {
+    private void loadStats() {
 
         try {
-            // 1. Vider la session utilisateur
-            new AuthService().logout();
 
-            // 2. Charger le fichier FXML de login
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/login.fxml")
-            );
+            // =================================================
+            // NOMBRE ÉTUDIANTS
+            // =================================================
 
-            // 3. Récupérer la fenêtre actuelle
-            Stage stage = (Stage) nomUserLabel.getScene().getWindow();
+            String sqlStudents =
+                    "SELECT COUNT(*) FROM students";
 
-            // 4. Remplacer la scène par le login
-            stage.setScene(new Scene(loader.load()));
-            stage.setMaximized(true);
+            PreparedStatement stmtStudents =
+                    cnx.prepareStatement(sqlStudents);
+
+            ResultSet rsStudents =
+                    stmtStudents.executeQuery();
+
+            if (rsStudents.next()) {
+
+                nbEtudiantsLabel.setText(
+                        String.valueOf(
+                                rsStudents.getInt(1)
+                        )
+                );
+            }
+
+            // =================================================
+            // NOMBRE LOGEMENTS LIBRES
+            // =================================================
+
+            String sqlRooms =
+                    "SELECT COUNT(*) FROM rooms " +
+                            "WHERE statut_room='LIBRE'";
+
+            PreparedStatement stmtRooms =
+                    cnx.prepareStatement(sqlRooms);
+
+            ResultSet rsRooms =
+                    stmtRooms.executeQuery();
+
+            if (rsRooms.next()) {
+
+                nbLogementsLabel.setText(
+                        String.valueOf(
+                                rsRooms.getInt(1)
+                        )
+                );
+            }
+
+            // =================================================
+            // NOMBRE INCIDENTS
+            // =================================================
+
+            String sqlIncidents =
+                    "SELECT COUNT(*) FROM incidents";
+
+            PreparedStatement stmtIncidents =
+                    cnx.prepareStatement(sqlIncidents);
+
+            ResultSet rsIncidents =
+                    stmtIncidents.executeQuery();
+
+            if (rsIncidents.next()) {
+
+                nbIncidentsLabel.setText(
+                        String.valueOf(
+                                rsIncidents.getInt(1)
+                        )
+                );
+            }
 
         } catch (Exception e) {
-            System.out.println("❌ Erreur lors du logout : " + e.getMessage());
-        }
-    }
 
-    /**
-     * Navigation vers la gestion des étudiants
-     * (page à créer au Sprint 2)
-     */
-    @FXML
-    public void handleEtudiants() {
-        System.out.println("→ Module Étudiants (Sprint 2)");
-        // TODO : charger etudiants.fxml
-    }
-
-    /**
-     * Navigation vers la gestion des logements
-     */
-    @FXML
-    public void handleLogements() {
-        System.out.println("→ Clic sur Logements - Chargement de la page...");
-        try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/logements.fxml")
+            System.out.println(
+                    "❌ Erreur chargement statistiques"
             );
-            Stage stage = (Stage) nomUserLabel.getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
-            stage.setMaximized(true);
-            System.out.println("✅ Page logements chargée avec succès");
-        } catch (Exception e) {
-            System.out.println("❌ Erreur chargement logements : " + e.getMessage());
+
             e.printStackTrace();
         }
     }
 
-    /**
-     * Navigation vers la gestion des paiements
-     */
+    // =====================================================
+    // NAVIGATION → ÉTUDIANTS
+    // =====================================================
+
     @FXML
-    public void handlePaiements() {
-        System.out.println("→ Module Paiements (Sprint 2)");
-        // TODO : charger paiements.fxml
+    public void handleEtudiants() {
+
+        System.out.println(
+                "→ Chargement module étudiants..."
+        );
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/view/students.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load());
+
+            Stage stage =
+                    (Stage) nbEtudiantsLabel
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle(
+                    "Gestion des Étudiants"
+            );
+
+            stage.setMaximized(true);
+
+            System.out.println(
+                    "✅ Module étudiants chargé"
+            );
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "❌ Erreur ouverture étudiants"
+            );
+
+            e.printStackTrace();
+        }
     }
 
-    /**
-     * Navigation vers la gestion des incidents
-     */
+    // =====================================================
+    // NAVIGATION → LOGEMENTS
+    // =====================================================
+
+    @FXML
+    public void handleLogements() {
+
+        System.out.println(
+                "→ Chargement logements..."
+        );
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/view/logements.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load());
+
+            Stage stage =
+                    (Stage) nbEtudiantsLabel
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle(
+                    "Gestion des Logements"
+            );
+
+            stage.setMaximized(true);
+
+            System.out.println(
+                    "✅ Logements chargés"
+            );
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "❌ Erreur logements"
+            );
+
+            e.printStackTrace();
+        }
+    }
+
+    // =====================================================
+    // NAVIGATION → PAIEMENTS
+    // =====================================================
+
+    @FXML
+    public void handlePaiements() {
+
+        System.out.println(
+                "→ Module Paiements"
+        );
+    }
+
+    // =====================================================
+    // NAVIGATION → INCIDENTS
+    // =====================================================
+
     @FXML
     public void handleIncidents() {
-        System.out.println("→ Module Incidents (Sprint 2)");
-        // TODO : charger incidents.fxml
+
+        System.out.println(
+                "→ Module Incidents"
+        );
+    }
+
+    // =====================================================
+    // DÉCONNEXION
+    // =====================================================
+
+    @FXML
+    public void handleLogout() {
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/view/login.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load());
+
+            Stage stage =
+                    (Stage) nbEtudiantsLabel
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle(
+                    "Connexion"
+            );
+
+            stage.setMaximized(true);
+
+            System.out.println(
+                    "✅ Déconnexion réussie"
+            );
+
+        } catch (Exception e) {
+
+            System.out.println(
+                    "❌ Erreur déconnexion"
+            );
+
+            e.printStackTrace();
+        }
     }
 }

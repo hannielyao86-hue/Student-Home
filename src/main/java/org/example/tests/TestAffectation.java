@@ -11,22 +11,22 @@ public class TestAffectation {
 
         // ===== Student =====
 
-        Student student =
-                new Student(
-                        1,
-                        "ET001",
-                        "ESPRIT",
-                        "12345678",
-                        "2026-05-10",
-                        "2027-05-10"
-                );
+        Student student = new Student(
+                6,
+                "ET006",
+                "ESPRIT",
+                "12345678",
+                "2026-05-10",
+                "2027-05-10",
+                1
+        );
 
         // ===== Room =====
 
         Room room =
                 new Room(
-                        1,
-                        "A101",
+                        7,
+                        "A107",
                         "SIMPLE",
                         1,
                         "LIBRE",
@@ -35,22 +35,18 @@ public class TestAffectation {
 
         // ===== Affectation =====
 
-        Affectation affectation =
-                new Affectation(
-                        student,
-                        room,
-                        "2026-05-13"
-                );
+        Affectation affectation = new Affectation(
+                student,
+                room,
+                "2026-05-13"
+        );
 
         // ===== DAO =====
 
-        AffectationDAO dao =
-                new AffectationDAO();
+        AffectationDAO dao = new AffectationDAO();
 
         dao.createAffectation(affectation);
 
-        System.out.println(
-                "✔ TEST TERMINÉ"
-        );
+        System.out.println("✔ TEST TERMINÉ");
     }
 }

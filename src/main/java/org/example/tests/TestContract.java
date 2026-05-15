@@ -8,7 +8,7 @@ public class TestContract {
     public static void main(String[] args) {
 
         Contract contract = new Contract(
-                "CT004",
+                "CT007",
                 "2026-05-10",
                 "2027-05-10",
                 1500.00,
