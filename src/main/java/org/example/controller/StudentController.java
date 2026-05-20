@@ -1,15 +1,18 @@
 package org.example.controller;
 
+import org.example.dao.StudentDAO;
+import org.example.model.Student;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import org.example.dao.StudentDAO;
-import org.example.model.Student;
 
 public class StudentController {
 
@@ -145,8 +148,118 @@ public class StudentController {
 
     // NAVIGATION inchangée
     @FXML
-    public void handleDashboard() { /* ok */ }
+    public void handleDashboard() {
+
+        System.out.println("→ Chargement Dashboard...");
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = (Stage) studentTable.getScene().getWindow();
+
+            stage.setScene(scene);
+            stage.setTitle("Tableau de bord");
+            stage.setMaximized(true);
+
+            System.out.println("✅ Dashboard chargé");
+
+        } catch (Exception e) {
+
+            System.out.println("❌ Erreur ouverture dashboard");
+            e.printStackTrace();
+        }
+    }
 
     @FXML
-    public void handleLogout() { /* ok */ }
+    public void handleEtudiants() {
+
+        System.out.println("→ Chargement module étudiants...");
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/students.fxml"));
+
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = (Stage) studentTable.getScene().getWindow();
+
+            stage.setScene(scene);
+            stage.setTitle("Gestion des Étudiants");
+            stage.setMaximized(true);
+
+            System.out.println("✅ Module étudiants chargé");
+
+        } catch (Exception e) {
+
+            System.out.println("❌ Erreur ouverture étudiants");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handleLogements() {
+
+        System.out.println("→ Chargement logements...");
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/logements.fxml"));
+
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = (Stage) studentTable.getScene().getWindow();
+
+            stage.setScene(scene);
+            stage.setTitle("Gestion des Logements");
+            stage.setMaximized(true);
+
+            System.out.println("✅ Logements chargés");
+
+        } catch (Exception e) {
+
+            System.out.println("❌ Erreur logements");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void handlePaiements() {
+
+        System.out.println("→ Module Paiements");
+    }
+
+    @FXML
+    public void handleIncidents() {
+
+        System.out.println("→ Module Incidents");
+    }
+
+    @FXML
+    public void handleLogout() {
+
+        System.out.println("→ Déconnexion...");
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
+
+            Scene scene = new Scene(loader.load());
+
+            Stage stage = (Stage) studentTable.getScene().getWindow();
+
+            stage.setScene(scene);
+            stage.setTitle("Connexion");
+            stage.setMaximized(true);
+
+            System.out.println("✅ Déconnexion réussie");
+
+        } catch (Exception e) {
+
+            System.out.println("❌ Erreur déconnexion");
+            e.printStackTrace();
+        }
+    }
 }

@@ -2,16 +2,34 @@ package org.example.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.example.dao.RoomDAO;
+import org.example.model.Room;
 import org.example.service.AuthService;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class LogementsController {
@@ -37,6 +55,8 @@ public class LogementsController {
     private Label leaseAmountLabel;
     @FXML
     private Label roomStatusLabel;
+    @FXML
+    private FlowPane roomsFlowPane;
 
     private final Map<String, RoomInfo> roomDetails = new HashMap<>();
 
@@ -52,7 +72,12 @@ public class LogementsController {
                 roleLabel.setText("Rôle ID : 1");
             }
             initializeRoomDetails();
-            updateRoomDetail(roomDetails.get("A101"));
+            if (!roomDetails.isEmpty()) {
+                String firstRoom = roomDetails.keySet().iterator().next();
+                updateRoomDetail(roomDetails.get(firstRoom));
+            } else {
+                updateRoomDetail(createDefaultRoom("Aucune chambre"));
+            }
             System.out.println("✅ LogementsController initialisé avec succès");
         } catch (Exception e) {
             System.out.println("❌ Erreur initialisation LogementsController : " + e.getMessage());
@@ -62,34 +87,125 @@ public class LogementsController {
     }
 
     private void initializeRoomDetails() {
-        roomDetails.put("A101", new RoomInfo("A101", "Occupé", "Nohe d'ahandrove", "(019) 904 3776", "19/02/2024", "03/12/2024", "3000 €", "Payé", "#27ae60"));
-        roomDetails.put("A102", new RoomInfo("A102", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
-        roomDetails.put("A103", new RoomInfo("A103", "Réservé", "Réservation en attente", "--", "--", "--", "0 €", "Réservé", "#f1c40f"));
-        roomDetails.put("A104", new RoomInfo("A104", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
-        roomDetails.put("A105", new RoomInfo("A105", "Occupé", "Marcien Rannemana", "(020) 333 2211", "12/01/2024", "12/01/2025", "3200 €", "En cours", "#e74c3c"));
+        if (roomsFlowPane != null) {
+            roomsFlowPane.getChildren().clear();
+        }
 
-        roomDetails.put("B101", new RoomInfo("B101", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
-        roomDetails.put("B102", new RoomInfo("B102", "Occupé", "Lala Rakoto", "(021) 112 4455", "05/03/2024", "05/03/2025", "2800 €", "Payé", "#27ae60"));
-        roomDetails.put("B103", new RoomInfo("B103", "Réservé", "Réservation en cours", "--", "20/05/2024", "20/11/2024", "2900 €", "Réservé", "#f1c40f"));
-        roomDetails.put("B104", new RoomInfo("B104", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
-        roomDetails.put("B105", new RoomInfo("B105", "Occupé", "Fanja Ramaroson", "(022) 998 7744", "10/09/2023", "10/09/2024", "3100 €", "En cours", "#e74c3c"));
+        RoomDAO roomDAO = new RoomDAO();
+        List<Room> rooms = roomDAO.getAllRooms();
 
-        roomDetails.put("C101", new RoomInfo("C101", "Réservé", "Réservation en attente", "--", "01/06/2024", "30/11/2024", "2700 €", "Réservé", "#f1c40f"));
-        roomDetails.put("C102", new RoomInfo("C102", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
-        roomDetails.put("C103", new RoomInfo("C103", "Occupé", "Aina Ravelonarivo", "(023) 556 8899", "15/02/2024", "15/02/2025", "3300 €", "Payé", "#27ae60"));
-        roomDetails.put("C104", new RoomInfo("C104", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
-        roomDetails.put("C105", new RoomInfo("C105", "Réservé", "Réservation confirmée", "--", "07/04/2024", "07/10/2024", "2950 €", "Réservé", "#f1c40f"));
+        if (rooms.isEmpty()) {
+            System.out.println("⚠️ Aucune chambre trouvée en base de données. Verifie la table rooms.");
+            return;
+        }
 
-        roomDetails.put("D101", new RoomInfo("D101", "Occupé", "Miora Rasolofonirina", "(024) 334 6677", "18/01/2024", "18/01/2025", "3400 €", "En cours", "#e74c3c"));
-        roomDetails.put("D102", new RoomInfo("D102", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
-        roomDetails.put("D103", new RoomInfo("D103", "Réservé", "Réservation en attente", "--", "22/07/2024", "22/01/2025", "2850 €", "Réservé", "#f1c40f"));
-        roomDetails.put("D104", new RoomInfo("D104", "Occupé", "Tiana Rakotomalala", "(025) 778 9900", "02/12/2023", "02/12/2024", "3050 €", "Payé", "#27ae60"));
-        roomDetails.put("D105", new RoomInfo("D105", "Libre", "Aucun résident", "--", "--", "--", "0 €", "Libre", "#2ecc71"));
+        for (Room room : rooms) {
+            RoomInfo info = createRoomInfoFromRoom(room);
+            roomDetails.put(room.getNumeroRoom(), info);
+            createRoomCard(room, info);
+        }
+    }
+
+    private void createRoomCard(Room room, RoomInfo info) {
+        String statusColor = getStatusColor(room.getStatutRoom());
+
+        Button roomButton = new Button();
+        roomButton.setPrefWidth(220);
+        roomButton.setPrefHeight(160);
+        roomButton.setStyle(
+                "-fx-background-color: " + statusColor + ";" +
+                " -fx-background-radius: 18;" +
+                " -fx-text-fill: white;" +
+                " -fx-padding: 0;"
+        );
+        roomButton.setUserData(room.getNumeroRoom());
+        roomButton.setOnAction(this::handleRoomClick);
+
+        Label status = new Label(info.status());
+        status.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
+
+        Label roomNumber = new Label(room.getNumeroRoom());
+        roomNumber.setStyle("-fx-font-size: 32px; -fx-font-weight: bold;");
+
+        Label roomType = new Label(room.getTypeRoom());
+        roomType.setStyle("-fx-font-size: 13px;");
+
+        Label rentLabel = new Label(info.leaseAmount());
+        rentLabel.setStyle("-fx-font-size: 12px;");
+
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        HBox topRow = new HBox(8, status, spacer, rentLabel);
+        topRow.setAlignment(Pos.CENTER_LEFT);
+
+        VBox content = new VBox(10, topRow, roomNumber, roomType);
+        content.setAlignment(Pos.TOP_LEFT);
+        content.setStyle("-fx-padding: 18;");
+
+        roomButton.setGraphic(content);
+        if (roomsFlowPane != null) {
+            roomsFlowPane.getChildren().add(roomButton);
+        }
+    }
+
+    private String getStatusColor(String statut) {
+        if (statut == null) {
+            return "#7f8c8d";
+        }
+        String normalized = statut.trim().toUpperCase();
+        if (normalized.contains("LIBRE")) {
+            return "#2ecc71";
+        }
+        if (normalized.contains("OCCUPE")) {
+            return "#e74c3c";
+        }
+        if (normalized.contains("RESERVE") || normalized.contains("RÉSERVÉ") || normalized.contains("RESERVÉ")) {
+            return "#f1c40f";
+        }
+        return "#7f8c8d";
+    }
+
+    private RoomInfo createRoomInfoFromRoom(Room room) {
+        String statut = room.getStatutRoom() == null ? "Indisponible" : room.getStatutRoom().trim();
+        String statusLabel;
+        String statusColor;
+
+        if (statut.equalsIgnoreCase("LIBRE")) {
+            statusLabel = "Libre";
+            statusColor = "#2ecc71";
+        } else if (statut.equalsIgnoreCase("OCCUPEE") || statut.equalsIgnoreCase("OCCUPE")) {
+            statusLabel = "Occupé";
+            statusColor = "#e74c3c";
+        } else if (statut.equalsIgnoreCase("RESERVE") || statut.equalsIgnoreCase("RÉSERVÉ") || statut.equalsIgnoreCase("RESERVÉ")) {
+            statusLabel = "Réservé";
+            statusColor = "#f1c40f";
+        } else {
+            statusLabel = statut;
+            statusColor = "#7f8c8d";
+        }
+
+        return new RoomInfo(
+                room.getNumeroRoom(),
+                statusLabel,
+                "Aucun résident",
+                "--",
+                "--",
+                "--",
+                String.format("%.2f €", room.getLoyer()),
+                statusLabel,
+                statusColor
+        );
     }
 
     @FXML
     public void handleDashboard(ActionEvent event) {
         loadPage("/view/dashboard.fxml");
+    }
+
+    @FXML
+    public void handleAjouterRoom(ActionEvent event) {
+        showAddRoomDialog();
     }
 
     @FXML
@@ -132,6 +248,11 @@ public class LogementsController {
     }
 
     private String extractRoomNumber(Button button) {
+        Object userData = button.getUserData();
+        if (userData instanceof String roomNumber) {
+            return roomNumber;
+        }
+
         if (button.getGraphic() != null && button.getGraphic() instanceof javafx.scene.layout.VBox) {
             javafx.scene.layout.VBox graphicBox = (javafx.scene.layout.VBox) button.getGraphic();
             if (graphicBox.getChildren().size() > 1 && graphicBox.getChildren().get(1) instanceof Label) {
@@ -155,6 +276,108 @@ public class LogementsController {
 
     private RoomInfo createDefaultRoom(String roomNumber) {
         return new RoomInfo(roomNumber, "Indisponible", "Aucun résident", "--", "--", "--", "0 €", "N/A", "#7f8c8d");
+    }
+
+    private void showAddRoomDialog() {
+        Dialog<Room> dialog = new Dialog<>();
+        dialog.setTitle("Ajouter une chambre");
+        dialog.setHeaderText("Enregistre une nouvelle chambre dans la base de données");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField numeroField = new TextField();
+        numeroField.setPromptText("A106");
+        TextField typeField = new TextField();
+        typeField.setPromptText("SIMPLE / DOUBLE");
+        TextField capaciteField = new TextField();
+        capaciteField.setPromptText("1");
+        TextField statutField = new TextField("LIBRE");
+        statutField.setPromptText("LIBRE / OCCUPEE / RESERVE");
+        TextField loyerField = new TextField();
+        loyerField.setPromptText("2500.00");
+
+        grid.add(new Label("Numéro de chambre:"), 0, 0);
+        grid.add(numeroField, 1, 0);
+        grid.add(new Label("Type de chambre:"), 0, 1);
+        grid.add(typeField, 1, 1);
+        grid.add(new Label("Capacité:"), 0, 2);
+        grid.add(capaciteField, 1, 2);
+        grid.add(new Label("Statut:"), 0, 3);
+        grid.add(statutField, 1, 3);
+        grid.add(new Label("Loyer:"), 0, 4);
+        grid.add(loyerField, 1, 4);
+
+        Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(true);
+
+        Runnable validateInputs = () -> {
+            String numero = numeroField.getText().trim();
+            String type = typeField.getText().trim();
+            String capacite = capaciteField.getText().trim();
+            String loyer = loyerField.getText().trim();
+            boolean valid = !numero.isEmpty() && !type.isEmpty() && isInteger(capacite) && isDouble(loyer);
+            okButton.setDisable(!valid);
+        };
+
+        numeroField.textProperty().addListener((obs, oldValue, newValue) -> validateInputs.run());
+        typeField.textProperty().addListener((obs, oldValue, newValue) -> validateInputs.run());
+        capaciteField.textProperty().addListener((obs, oldValue, newValue) -> validateInputs.run());
+        loyerField.textProperty().addListener((obs, oldValue, newValue) -> validateInputs.run());
+
+        dialog.getDialogPane().setContent(grid);
+        Platform.runLater(numeroField::requestFocus);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                try {
+                    int capacite = Integer.parseInt(capaciteField.getText().trim());
+                    double loyer = Double.parseDouble(loyerField.getText().trim());
+                    String numero = numeroField.getText().trim().toUpperCase();
+                    String type = typeField.getText().trim().toUpperCase();
+                    String statut = statutField.getText().trim().toUpperCase();
+                    if (statut.isEmpty()) {
+                        statut = "LIBRE";
+                    }
+                    return new Room(0, numero, type, capacite, statut, loyer);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            return null;
+        });
+
+        Optional<Room> result = dialog.showAndWait();
+
+        result.ifPresent(room -> {
+            RoomDAO roomDAO = new RoomDAO();
+            if (roomDAO.createRoom(room)) {
+                initializeRoomDetails();
+                updateRoomDetail(roomDetails.get(room.getNumeroRoom()));
+                showAlert(Alert.AlertType.INFORMATION, "Chambre ajoutée", "La chambre a bien été enregistrée en base de données.");
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible d'enregistrer la chambre en base de données.");
+            }
+        });
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private boolean isInteger(String value) {
+        return value != null && !value.isEmpty() && value.matches("\\d+");
+    }
+
+    private boolean isDouble(String value) {
+        return value != null && !value.isEmpty() && value.matches("\\d+(\\.\\d+)?");
     }
 
     @FXML
