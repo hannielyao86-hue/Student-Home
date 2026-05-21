@@ -4,12 +4,14 @@ import org.example.service.AuthService;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import java.io.IOException;
 
 /**
  * LoginController.java
@@ -21,6 +23,7 @@ import javafx.stage.Stage;
  * - appeler AuthService.login()
  * - afficher les messages d'erreur
  * - rediriger vers le dashboard si connexion OK
+ * - rediriger vers la page inscription si clic sur "S'inscrire"
  */
 public class LoginController {
 
@@ -46,6 +49,7 @@ public class LoginController {
     private AuthService authService; // TEMPORAIRE
 
     // ACTIONS
+
     /**
      * Action du bouton "Se connecter".
      *
@@ -96,6 +100,30 @@ public class LoginController {
 
             // 4b. Connexion échouée → message d'erreur dans l'UI
             messageLabel.setText("❌ Email ou mot de passe incorrect");
+        }
+    }
+
+    /**
+     * Action du lien "S'inscrire".
+     * Redirige vers la page d'inscription.
+     */
+    @FXML
+    private void allerInscription() {
+        try {
+            // Charger le FXML de la page inscription
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/Inscription.fxml")
+            );
+            Parent root = loader.load();
+
+            // Récupérer la fenêtre actuelle et changer la scène
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            System.out.println("❌ Erreur chargement inscription : " + e.getMessage());
+            messageLabel.setText("Erreur technique, contactez l'admin");
         }
     }
 }
