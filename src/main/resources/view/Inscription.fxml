@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.InscriptionController"
+            style="-fx-background-color: #d9d9d9;"
+            prefWidth="900" prefHeight="780">
+
+    <!-- Carte blanche centrale -->
+    <VBox alignment="TOP_CENTER"
+          style="-fx-background-color: white; -fx-padding: 40;"
+          prefWidth="520" prefHeight="680">
+
+        <!-- Titre de la page -->
+        <Label text="Inscription"
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-padding: 0 0 30 0;"/>
+
+        <!-- Champ INE -->
+        <Label text="INE" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
+        <TextField fx:id="INEField"
+                   prefWidth="380" maxWidth="380" prefHeight="30"
+                   style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
+
+        <!-- Champ Nom -->
+        <Label text="Nom" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
+        <TextField fx:id="NomField"
+                   prefWidth="380" maxWidth="380" prefHeight="30"
+                   style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
+
+        <!-- Champ Prénom -->
+        <Label text="Prénom" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
+        <TextField fx:id="prenomField"
+                   prefWidth="380" maxWidth="380" prefHeight="30"
+                   style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
+
+        <!-- Champ Etablissement -->
+        <Label text="Etablissement" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
+        <TextField fx:id="etablissementField"
+                   prefWidth="380" maxWidth="380" prefHeight="30"
+                   style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
+
+        <!-- Champ Mail -->
+        <Label text="Mail" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
+        <TextField fx:id="mailField"
+                   prefWidth="380" maxWidth="380" prefHeight="30"
+                   style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
+
+        <!-- Champ Mot de passe -->
+        <Label text="Mot de passe" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
+        <PasswordField fx:id="motDePasseField"
+                       prefWidth="380" maxWidth="380" prefHeight="30"
+                       style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
+
+        <!-- Bouton S'inscrire -->
+        <Button text="S'inscrire"
+                onAction="#sInscrire"
+                prefWidth="200" prefHeight="40"
+                style="-fx-background-color: #d9d9d9; -fx-font-size: 14px; -fx-cursor: hand;"
+                VBox.vgrow="NEVER">
+            <VBox.margin>
+                <Insets top="30"/>
+            </VBox.margin>
+        </Button>
+
+    </VBox>
+
+</StackPane>

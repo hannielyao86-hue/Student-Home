@@ -35,4 +35,7 @@
             style="-fx-background-color: #27ae60; -fx-text-fill: white;"
             maxWidth="250"/>
 
+    <Hyperlink text="S'inscrire"
+               onAction="#allerInscription"
+               style="-fx-text-fill: red;"/>
 </VBox>
