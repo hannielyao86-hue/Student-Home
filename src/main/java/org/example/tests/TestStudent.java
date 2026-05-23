@@ -2,46 +2,115 @@ package org.example.tests;
 
 import org.example.dao.StudentDAO;
 import org.example.model.Student;
+
 import java.util.List;
 
-/**
- * Test CRUD Student
- * Lance ce fichier pour vérifier que tout fonctionne avec MySQL
- */
 public class TestStudent {
 
     public static void main(String[] args) {
 
         StudentDAO dao = new StudentDAO();
 
-        // ── CREATE ────────────────────────────────────────────────
-        // On crée un étudiant test
-        // idStudent = 0 car AUTO_INCREMENT (MySQL génère l'ID)
-        // idUsers   = 1 (utilisateur existant en BDD)
-        Student s = new Student(
+        // ═══════════════════════════════════════════════
+        // TEST AJOUT
+        // ═══════════════════════════════════════════════
+
+        Student student = new Student(
                 0,
-                "ET099",
+                "Ahmed",
+                "Ben Ali",
+                "ahmed@gmail.com",
                 "ESPRIT",
-                "55667788",
-                "2026-05-14",
-                "2027-05-14",
+                "22114455",
+                "2026-05-20",
+                "2026-12-30",
                 1
         );
 
-        dao.createStudent(s);  // ← méthode correcte
+        dao.createStudent(student);
 
-        // ── READ ALL ──────────────────────────────────────────────
-        // On affiche tous les étudiants
-        List<Student> liste = dao.getAllStudents();
+        System.out.println("✅ Étudiant ajouté");
 
-        System.out.println("\n===== LISTE ÉTUDIANTS =====");
-        for (Student etudiant : liste) {
-            System.out.println(etudiant.toString());
+        // ═══════════════════════════════════════════════
+        // TEST AFFICHAGE
+        // ═══════════════════════════════════════════════
+
+        List<Student> students = dao.getAllStudents();
+
+        System.out.println("\n══════ LISTE DES ÉTUDIANTS ═════=\n");
+
+        for (Student s : students) {
+
+            System.out.println(
+                    "ID : " + s.getIdStudent()
+            );
+
+            System.out.println(
+                    "Nom : " + s.getNom()
+            );
+
+            System.out.println(
+                    "Prénom : " + s.getPrenom()
+            );
+
+            System.out.println(
+                    "Email : " + s.getEmail()
+            );
+
+            System.out.println(
+                    "École : " + s.getEcole()
+            );
+
+            System.out.println(
+                    "Téléphone : " + s.getTelephone()
+            );
+
+            System.out.println(
+                    "Date entrée : " + s.getDateEntree()
+            );
+
+            System.out.println(
+                    "Date sortie : " + s.getDateSortie()
+            );
+
+            System.out.println(
+                    "ID User : " + s.getIdUsers()
+            );
+
+            System.out.println("-----------------------------------");
         }
 
-        // ── COUNT ─────────────────────────────────────────────────
-        System.out.println("\nNombre total : " + dao.countStudents());
+        // ═══════════════════════════════════════════════
+        // TEST COUNT
+        // ═══════════════════════════════════════════════
 
-        System.out.println("\n✅ TEST STUDENT TERMINÉ");
+        int total = dao.countStudents();
+
+        System.out.println("\n📌 Nombre total étudiants : " + total);
+
+        // ═══════════════════════════════════════════════
+        // TEST UPDATE
+        // ═══════════════════════════════════════════════
+
+        if (!students.isEmpty()) {
+
+            Student first = students.get(0);
+
+            first.setTelephone("99999999");
+
+            dao.updateStudent(first);
+
+            System.out.println("✅ Téléphone modifié");
+        }
+
+        // ═══════════════════════════════════════════════
+        // TEST DELETE
+        // ═══════════════════════════════════════════════
+
+        /*
+        dao.deleteStudent(1);
+
+        System.out.println("✅ Étudiant supprimé");
+        */
     }
 }

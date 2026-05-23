@@ -1,52 +1,23 @@
 package org.example.tests;
 
-import org.example.dao.AffectationDAO;
-import org.example.model.Affectation;
-import org.example.model.Room;
 import org.example.model.Student;
 
 public class TestAffectation {
 
     public static void main(String[] args) {
 
-        // ===== Student =====
-
         Student student = new Student(
-                6,
-                "ET006",
+                1,
+                "Ahmed",
+                "Ben Ali",
+                "ahmed@gmail.com",
                 "ESPRIT",
-                "12345678",
-                "2026-05-10",
-                "2027-05-10",
+                "22114455",
+                "2026-05-20",
+                "2026-12-30",
                 1
         );
 
-        // ===== Room =====
-
-        Room room =
-                new Room(
-                        7,
-                        "A107",
-                        "SIMPLE",
-                        1,
-                        "LIBRE",
-                        500
-                );
-
-        // ===== Affectation =====
-
-        Affectation affectation = new Affectation(
-                student,
-                room,
-                "2026-05-13"
-        );
-
-        // ===== DAO =====
-
-        AffectationDAO dao = new AffectationDAO();
-
-        dao.createAffectation(affectation);
-
-        System.out.println("✔ TEST TERMINÉ");
+        System.out.println(student);
     }
 }
