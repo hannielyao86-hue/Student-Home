@@ -15,27 +15,20 @@
     <top>
         <HBox spacing="15"
               alignment="CENTER_LEFT"
-              style="-fx-background-color:#2c3e50;
-                     -fx-padding:15;">
+              style="-fx-background-color:#2c3e50; -fx-padding:15;">
 
             <Label text="Gestion des Étudiants"
-                   style="-fx-text-fill:white;
-                          -fx-font-size:22px;
-                          -fx-font-weight:bold;" />
+                   style="-fx-text-fill:white; -fx-font-size:22px; -fx-font-weight:bold;" />
 
             <Region HBox.hgrow="ALWAYS" />
 
             <Button text="Dashboard"
                     onAction="#handleDashboard"
-                    style="-fx-background-color:#3498db;
-                           -fx-text-fill:white;
-                           -fx-font-weight:bold;" />
+                    style="-fx-background-color:#3498db; -fx-text-fill:white; -fx-font-weight:bold;" />
 
             <Button text="Logout"
                     onAction="#handleLogout"
-                    style="-fx-background-color:#e74c3c;
-                           -fx-text-fill:white;
-                           -fx-font-weight:bold;" />
+                    style="-fx-background-color:#e74c3c; -fx-text-fill:white; -fx-font-weight:bold;" />
 
         </HBox>
     </top>
@@ -46,7 +39,12 @@
 
     <center>
 
-        <VBox spacing="20" padding="20">
+        <VBox spacing="20">
+
+            <!-- padding corrigé -->
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
 
             <!-- ================= FORMULAIRE ================= -->
 
@@ -60,9 +58,7 @@
                 </columnConstraints>
 
                 <!-- ID -->
-
                 <Label text="ID :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-
                 <TextField fx:id="idField"
                            editable="false"
                            promptText="ID automatique"
@@ -70,62 +66,48 @@
                            GridPane.columnIndex="1"/>
 
                 <!-- NOM -->
-
                 <Label text="Nom :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-
                 <TextField fx:id="nomField"
                            promptText="Nom étudiant"
                            GridPane.rowIndex="1"
                            GridPane.columnIndex="1"/>
 
                 <!-- PRENOM -->
-
                 <Label text="Prénom :" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-
                 <TextField fx:id="prenomField"
                            promptText="Prénom étudiant"
                            GridPane.rowIndex="1"
                            GridPane.columnIndex="3"/>
 
                 <!-- EMAIL -->
-
                 <Label text="Email :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-
                 <TextField fx:id="emailField"
                            promptText="Email étudiant"
                            GridPane.rowIndex="2"
                            GridPane.columnIndex="1"/>
 
                 <!-- ECOLE -->
-
                 <Label text="École :" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-
                 <TextField fx:id="ecoleField"
                            promptText="Nom école"
                            GridPane.rowIndex="2"
                            GridPane.columnIndex="3"/>
 
                 <!-- TELEPHONE -->
-
                 <Label text="Téléphone :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-
                 <TextField fx:id="telephoneField"
                            promptText="Téléphone"
                            GridPane.rowIndex="3"
                            GridPane.columnIndex="1"/>
 
                 <!-- DATE ENTREE -->
-
                 <Label text="Date entrée :" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-
                 <DatePicker fx:id="dateEntreePicker"
                             GridPane.rowIndex="3"
                             GridPane.columnIndex="3"/>
 
                 <!-- DATE SORTIE -->
-
                 <Label text="Date sortie :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-
                 <DatePicker fx:id="dateSortiePicker"
                             GridPane.rowIndex="4"
                             GridPane.columnIndex="1"/>
@@ -138,72 +120,37 @@
 
                 <Button text="Ajouter"
                         onAction="#handleAddStudent"
-                        style="-fx-background-color:#27ae60;
-                               -fx-text-fill:white;
-                               -fx-font-weight:bold;
-                               -fx-pref-width:120;" />
+                        style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
 
                 <Button text="Modifier"
                         onAction="#handleUpdateStudent"
-                        style="-fx-background-color:#f39c12;
-                               -fx-text-fill:white;
-                               -fx-font-weight:bold;
-                               -fx-pref-width:120;" />
+                        style="-fx-background-color:#f39c12; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
 
                 <Button text="Supprimer"
                         onAction="#handleDeleteStudent"
-                        style="-fx-background-color:#c0392b;
-                               -fx-text-fill:white;
-                               -fx-font-weight:bold;
-                               -fx-pref-width:120;" />
+                        style="-fx-background-color:#c0392b; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
 
                 <Button text="Actualiser"
                         onAction="#loadStudents"
-                        style="-fx-background-color:#2980b9;
-                               -fx-text-fill:white;
-                               -fx-font-weight:bold;
-                               -fx-pref-width:120;" />
+                        style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
 
             </HBox>
 
-            <!-- ================= TABLEVIEW ================= -->
+            <!-- ================= TABLE ================= -->
 
             <TableView fx:id="studentTable"
                        prefHeight="500">
 
                 <columns>
 
-                    <TableColumn fx:id="idColumn"
-                                 text="ID"
-                                 prefWidth="70"/>
-
-                    <TableColumn fx:id="nomColumn"
-                                 text="Nom"
-                                 prefWidth="140"/>
-
-                    <TableColumn fx:id="prenomColumn"
-                                 text="Prénom"
-                                 prefWidth="140"/>
-
-                    <TableColumn fx:id="emailColumn"
-                                 text="Email"
-                                 prefWidth="220"/>
-
-                    <TableColumn fx:id="ecoleColumn"
-                                 text="École"
-                                 prefWidth="150"/>
-
-                    <TableColumn fx:id="telephoneColumn"
-                                 text="Téléphone"
-                                 prefWidth="140"/>
-
-                    <TableColumn fx:id="dateEntreeColumn"
-                                 text="Date Entrée"
-                                 prefWidth="120"/>
-
-                    <TableColumn fx:id="dateSortieColumn"
-                                 text="Date Sortie"
-                                 prefWidth="120"/>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="70"/>
+                    <TableColumn fx:id="nomColumn" text="Nom" prefWidth="140"/>
+                    <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="140"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="220"/>
+                    <TableColumn fx:id="ecoleColumn" text="École" prefWidth="150"/>
+                    <TableColumn fx:id="telephoneColumn" text="Téléphone" prefWidth="140"/>
+                    <TableColumn fx:id="dateEntreeColumn" text="Date Entrée" prefWidth="120"/>
+                    <TableColumn fx:id="dateSortieColumn" text="Date Sortie" prefWidth="120"/>
 
                 </columns>
 
