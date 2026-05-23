@@ -120,4 +120,31 @@ public class UserDAO {
 
         return null;
     }
+    /**
+     * Inscrire un nouvel utilisateur
+     */
+    public boolean inscrire(User user) {
+
+        String sql = "INSERT INTO Users (nom_users, prenom_user, email_user, " +
+                "mot_passe_hash, statut, date_creation, id_roles) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, user.getNomUsers());
+            ps.setString(2, user.getPrenomUser());
+            ps.setString(3, user.getEmailUser());
+            ps.setString(4, user.getMotPasseHash());
+            ps.setString(5, user.getStatut());
+            ps.setTimestamp(6, java.sql.Timestamp.valueOf(user.getDateCreation()));
+            ps.setInt(7, user.getRoleId());
+
+            int lignes = ps.executeUpdate();
+            return lignes > 0;
+
+        } catch (Exception e) {
+            System.out.println("❌ Erreur inscrire : " + e.getMessage());
+            return false;
+        }
+    }
 }
