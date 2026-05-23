@@ -99,9 +99,11 @@
                 </HBox>
             </VBox>
             <HBox spacing="12">
-                <Button text="Modifier" onAction="#handleModifier" prefWidth="140"
+                <Button text="Modifier" onAction="#handleModifier" prefWidth="130"
                         style="-fx-background-color: transparent; -fx-border-color: #2c3e50; -fx-border-radius: 10;"/>
-                <Button text="Générer Contrat" onAction="#handleGenererContrat" prefWidth="160"
+                <Button text="Affecter" onAction="#handleAffecterRoom" prefWidth="130"
+                        style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-border-radius: 10;"/>
+                    <Button text="Informations" onAction="#handleGenererContrat" prefWidth="150"
                         style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-border-radius: 10;"/>
             </HBox>
         </VBox>

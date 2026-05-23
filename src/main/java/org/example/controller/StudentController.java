@@ -1,17 +1,21 @@
 package org.example.controller;
 
+import java.time.LocalDate;
+
+import org.example.dao.StudentDAO;
+import org.example.model.Student;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
-import org.example.dao.StudentDAO;
-import org.example.model.Student;
-
-import java.time.LocalDate;
 
 public class StudentController {
 
@@ -73,6 +77,12 @@ public class StudentController {
 
     @FXML
     private DatePicker dateSortiePicker;
+
+    @FXML
+    private Label nomUserLabel;
+
+    @FXML
+    private Label roleLabel;
 
     // ═══════════════════════════════════════════════════════════════
     // DAO
@@ -371,26 +381,37 @@ public class StudentController {
 
     @FXML
     public void handleDashboard() {
+        loadPage("/view/dashboard.fxml");
+    }
 
+    @FXML
+    public void handleLogements() {
+        loadPage("/view/logements.fxml");
+    }
+
+    @FXML
+    public void handlePaiements() {
+        loadPage("/view/payments.fxml");
+    }
+
+    @FXML
+    public void handleIncidents() {
+        loadPage("/view/incidents.fxml");
+    }
+
+    private void loadPage(String fxmlPath) {
         try {
-
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/dashboard.fxml")
+                    getClass().getResource(fxmlPath)
             );
-
             Stage stage = (Stage)
                     studentTable.getScene().getWindow();
-
             stage.setScene(
                     new Scene(loader.load())
             );
-
             stage.setMaximized(true);
-
         } catch (Exception e) {
-
-            System.out.println("❌ Erreur dashboard : " + e.getMessage());
-
+            System.out.println("❌ Erreur chargement page : " + e.getMessage());
             e.printStackTrace();
         }
     }

@@ -66,6 +66,20 @@ public class RoomDAO {
         return false;
     }
 
+    public boolean updateRoom(Room room) {
+        String sql = "UPDATE rooms SET loyer = ?, statut_room = ? WHERE id_room = ?";
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setDouble(1, room.getLoyer());
+            ps.setString(2, room.getStatutRoom());
+            ps.setInt(3, room.getIdRoom());
+            ps.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            System.err.println("RoomDAO updateRoom error: " + e.getMessage());
+        }
+        return false;
+    }
+
     private int getNextRoomId() {
         String sql = "SELECT COALESCE(MAX(id_room), 0) + 1 AS next_id FROM rooms";
         try (PreparedStatement ps = cnx.prepareStatement(sql);
