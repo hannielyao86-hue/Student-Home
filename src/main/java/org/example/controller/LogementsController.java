@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,9 +57,12 @@ public class LogementsController {
     @FXML
     private Label roomStatusLabel;
     @FXML
+    private TextField searchField;
+    @FXML
     private FlowPane roomsFlowPane;
 
     private final Map<String, RoomInfo> roomDetails = new HashMap<>();
+    private final List<Room> allRooms = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -72,6 +76,9 @@ public class LogementsController {
                 roleLabel.setText("Rôle ID : 1");
             }
             initializeRoomDetails();
+            if (searchField != null) {
+                searchField.textProperty().addListener((obs, oldValue, newValue) -> filterRooms(newValue));
+            }
             if (!roomDetails.isEmpty()) {
                 String firstRoom = roomDetails.keySet().iterator().next();
                 updateRoomDetail(roomDetails.get(firstRoom));
@@ -90,6 +97,8 @@ public class LogementsController {
         if (roomsFlowPane != null) {
             roomsFlowPane.getChildren().clear();
         }
+        roomDetails.clear();
+        allRooms.clear();
 
         RoomDAO roomDAO = new RoomDAO();
         List<Room> rooms = roomDAO.getAllRooms();
@@ -99,11 +108,31 @@ public class LogementsController {
             return;
         }
 
+        allRooms.addAll(rooms);
         for (Room room : rooms) {
             RoomInfo info = createRoomInfoFromRoom(room);
             roomDetails.put(room.getNumeroRoom(), info);
             createRoomCard(room, info);
         }
+    }
+
+    private void filterRooms(String query) {
+        if (roomsFlowPane == null) {
+            return;
+        }
+        roomsFlowPane.getChildren().clear();
+        if (query == null || query.isBlank()) {
+            allRooms.forEach(room -> createRoomCard(room, createRoomInfoFromRoom(room)));
+            return;
+        }
+
+        String normalized = query.trim().toUpperCase();
+        allRooms.stream()
+                .filter(room -> room.getNumeroRoom().toUpperCase().contains(normalized)
+                        || room.getTypeRoom().toUpperCase().contains(normalized)
+                        || (room.getStatutRoom() != null && room.getStatutRoom().toUpperCase().contains(normalized))
+                        || String.valueOf(room.getLoyer()).contains(normalized))
+                .forEach(room -> createRoomCard(room, createRoomInfoFromRoom(room)));
     }
 
     private void createRoomCard(Room room, RoomInfo info) {
@@ -155,13 +184,13 @@ public class LogementsController {
         }
         String normalized = statut.trim().toUpperCase();
         if (normalized.contains("LIBRE")) {
-            return "#2ecc71";
+            return "#27ae60"; // vert uniforme
         }
         if (normalized.contains("OCCUPE")) {
-            return "#e74c3c";
+            return "#c0392b"; // rouge vif uniforme
         }
         if (normalized.contains("RESERVE") || normalized.contains("RÉSERVÉ") || normalized.contains("RESERVÉ")) {
-            return "#f1c40f";
+            return "#f39c12"; // jaune orangé uniforme
         }
         return "#7f8c8d";
     }
@@ -173,13 +202,13 @@ public class LogementsController {
 
         if (statut.equalsIgnoreCase("LIBRE")) {
             statusLabel = "Libre";
-            statusColor = "#2ecc71";
+            statusColor = "#27ae60";
         } else if (statut.equalsIgnoreCase("OCCUPEE") || statut.equalsIgnoreCase("OCCUPE")) {
             statusLabel = "Occupé";
-            statusColor = "#e74c3c";
+            statusColor = "#c0392b";
         } else if (statut.equalsIgnoreCase("RESERVE") || statut.equalsIgnoreCase("RÉSERVÉ") || statut.equalsIgnoreCase("RESERVÉ")) {
             statusLabel = "Réservé";
-            statusColor = "#f1c40f";
+            statusColor = "#f39c12";
         } else {
             statusLabel = statut;
             statusColor = "#7f8c8d";

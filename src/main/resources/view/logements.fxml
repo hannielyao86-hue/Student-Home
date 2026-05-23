@@ -42,11 +42,11 @@
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <Label text="Rooms" style="-fx-font-size: 32px; -fx-font-weight: bold;"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <TextField promptText="Rechercher..." prefWidth="220"
+                <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="220"
                            style="-fx-background-radius: 999; -fx-background-color: white; -fx-border-color: transparent; -fx-padding: 10 16;"/>
                 <Button text="➕ Ajouter chambre" onAction="#handleAjouterRoom"
                         style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 999; -fx-padding: 10 16;"/>
-                <Button text="🔔" style="-fx-background-color: white; -fx-background-radius: 999; -fx-padding: 10; -fx-border-color: transparent;"/>
+                
             </HBox>
 
             <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
