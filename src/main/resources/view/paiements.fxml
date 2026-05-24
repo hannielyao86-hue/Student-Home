@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane
+        xmlns="http://javafx.com/javafx/17"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="org.example.controller.PaiementsController"
+        style="-fx-background-color: #f0f2f5;">
+
+    <top>
+        <VBox style="-fx-background-color: white;">
+
+            <!-- Barre titre -->
+            <HBox alignment="CENTER_LEFT" spacing="15"
+                  style="-fx-padding: 15 20; -fx-background-color: #1a252f;">
+                <Button text="← Retour"
+                        onAction="#handleRetour"
+                        style="-fx-background-color: rgba(255,255,255,0.15);
+                               -fx-text-fill: white; -fx-background-radius: 20;
+                               -fx-padding: 6 14; -fx-cursor: hand;"/>
+                <Label text="💰 Gestion des Paiements"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold;
+                              -fx-text-fill: white;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="🔄 Actualiser"
+                        onAction="#refreshTable"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                               -fx-background-radius: 20; -fx-padding: 6 14;"/>
+            </HBox>
+
+            <!-- Cartes statistiques -->
+            <HBox spacing="15" style="-fx-padding: 15 20; -fx-background-color: #f8f9fa;">
+                <VBox alignment="CENTER" spacing="4"
+                      style="-fx-background-color: #3498db; -fx-background-radius: 10;
+                             -fx-padding: 12 25;">
+                    <Label fx:id="statTotalLabel" text="0"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold;
+                                  -fx-text-fill: white;"/>
+                    <Label text="Total paiements"
+                           style="-fx-font-size: 11px; -fx-text-fill: white;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="4"
+                      style="-fx-background-color: #e74c3c; -fx-background-radius: 10;
+                             -fx-padding: 12 25;">
+                    <Label fx:id="statRetardLabel" text="0"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold;
+                                  -fx-text-fill: white;"/>
+                    <Label text="En retard"
+                           style="-fx-font-size: 11px; -fx-text-fill: white;"/>
+                </VBox>
+                <VBox alignment="CENTER" spacing="4"
+                      style="-fx-background-color: #27ae60; -fx-background-radius: 10;
+                             -fx-padding: 12 25;">
+                    <Label fx:id="statMontantLabel" text="0 €"
+                           style="-fx-font-size: 28px; -fx-font-weight: bold;
+                                  -fx-text-fill: white;"/>
+                    <Label text="Total collecté"
+                           style="-fx-font-size: 11px; -fx-text-fill: white;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Formulaire -->
+            <VBox spacing="10"
+                  style="-fx-padding: 15 20; -fx-background-color: white;
+                         -fx-border-color: #e9ecef; -fx-border-width: 1 0 0 0;">
+                <Label text="Nouveau paiement"
+                       style="-fx-font-size: 13px; -fx-font-weight: bold;
+                              -fx-text-fill: #2c3e50;"/>
+                <HBox spacing="12" alignment="CENTER_LEFT">
+                    <VBox spacing="4">
+                        <Label text="ID Paiement"
+                               style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                        <TextField fx:id="idField" promptText="PAY001"
+                                   prefWidth="90"
+                                   style="-fx-background-color: #ecf0f1;
+                                          -fx-background-radius: 6; -fx-padding: 7;"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Montant (€)"
+                               style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                        <TextField fx:id="montantField" promptText="500.00"
+                                   prefWidth="100"
+                                   style="-fx-background-radius: 6;
+                                          -fx-border-color: #dee2e6;
+                                          -fx-border-radius: 6; -fx-padding: 7;"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Date paiement"
+                               style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                        <TextField fx:id="datePaiementField" promptText="2026-05-01"
+                                   prefWidth="115"
+                                   style="-fx-background-radius: 6;
+                                          -fx-border-color: #dee2e6;
+                                          -fx-border-radius: 6; -fx-padding: 7;"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Statut"
+                               style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                        <ComboBox fx:id="statutCombo" prefWidth="130"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text="Pénalité (€)"
+                               style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                        <TextField fx:id="penaliteField" promptText="0.00"
+                                   prefWidth="90"
+                                   style="-fx-background-radius: 6;
+                                          -fx-border-color: #dee2e6;
+                                          -fx-border-radius: 6; -fx-padding: 7;"/>
+                    </VBox>
+                    <VBox spacing="4">
+                        <Label text=" " style="-fx-font-size: 11px;"/>
+                        <HBox spacing="8">
+                            <Button text="➕ Ajouter" onAction="#addPayment"
+                                    style="-fx-background-color: #27ae60;
+                                           -fx-text-fill: white; -fx-font-weight: bold;
+                                           -fx-background-radius: 6; -fx-padding: 7 14;
+                                           -fx-cursor: hand;"/>
+                            <Button text="✅ Payé" onAction="#marquerPaye"
+                                    style="-fx-background-color: #2980b9;
+                                           -fx-text-fill: white; -fx-background-radius: 6;
+                                           -fx-padding: 7 14; -fx-cursor: hand;"/>
+                            <Button text="⚠️ Retard" onAction="#marquerRetard"
+                                    style="-fx-background-color: #e67e22;
+                                           -fx-text-fill: white; -fx-background-radius: 6;
+                                           -fx-padding: 7 14; -fx-cursor: hand;"/>
+                            <Button text="🗑" onAction="#deletePayment"
+                                    style="-fx-background-color: #e74c3c;
+                                           -fx-text-fill: white; -fx-background-radius: 6;
+                                           -fx-padding: 7 12; -fx-cursor: hand;"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+                <Label fx:id="messageLabel" text=""
+                       style="-fx-font-size: 12px;"/>
+            </VBox>
+
+        </VBox>
+    </top>
+
+    <!-- Onglets tableaux -->
+    <center>
+        <TabPane tabClosingPolicy="UNAVAILABLE"
+                 style="-fx-padding: 10; -fx-background-color: #f0f2f5;">
+
+            <Tab text="📋 Tous les paiements">
+                <TableView fx:id="tableTous">
+                    <columns>
+                        <TableColumn fx:id="colId"       text="ID"          prefWidth="100"/>
+                        <TableColumn fx:id="colMontant"  text="Montant (€)" prefWidth="120"/>
+                        <TableColumn fx:id="colDate"     text="Date"        prefWidth="120"/>
+                        <TableColumn fx:id="colStatut"   text="Statut"      prefWidth="120"/>
+                        <TableColumn fx:id="colPenalite" text="Pénalité €"  prefWidth="110"/>
+                        <TableColumn fx:id="colTotal"    text="Total €"     prefWidth="110"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun paiement enregistré"
+                               style="-fx-text-fill: #95a5a6; -fx-font-size: 14px;"/>
+                    </placeholder>
+                </TableView>
+            </Tab>
+
+            <Tab text="⚠️ Retards">
+                <TableView fx:id="tableRetards">
+                    <columns>
+                        <TableColumn fx:id="colRetardId"       text="ID"          prefWidth="100"/>
+                        <TableColumn fx:id="colRetardMontant"  text="Montant (€)" prefWidth="120"/>
+                        <TableColumn fx:id="colRetardDate"     text="Date"        prefWidth="120"/>
+                        <TableColumn fx:id="colRetardPenalite" text="Pénalité €"  prefWidth="110"/>
+                        <TableColumn fx:id="colRetardTotal"    text="Total dû €"  prefWidth="110"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="Aucun retard 🎉"
+                               style="-fx-text-fill: #27ae60; -fx-font-size: 14px;"/>
+                    </placeholder>
+                </TableView>
+            </Tab>
+
+        </TabPane>
+    </center>
+
+</BorderPane>
