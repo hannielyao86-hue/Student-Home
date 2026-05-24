@@ -22,12 +22,6 @@
         <Label text="Inscription"
                style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-padding: 0 0 30 0;"/>
 
-        <!-- Champ INE -->
-        <Label text="INE" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
-        <TextField fx:id="INEField"
-                   prefWidth="380" maxWidth="380" prefHeight="30"
-                   style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
-
         <!-- Champ Nom -->
         <Label text="Nom" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
         <TextField fx:id="NomField"
@@ -40,11 +34,6 @@
                    prefWidth="380" maxWidth="380" prefHeight="30"
                    style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
 
-        <!-- Champ Etablissement -->
-        <Label text="Etablissement" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>
-        <TextField fx:id="etablissementField"
-                   prefWidth="380" maxWidth="380" prefHeight="30"
-                   style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
 
         <!-- Champ Mail -->
         <Label text="Mail" alignment="CENTER_LEFT" maxWidth="380" style="-fx-padding: 10 0 4 0;"/>

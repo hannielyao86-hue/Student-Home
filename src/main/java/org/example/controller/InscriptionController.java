@@ -1,24 +1,31 @@
 package org.example.controller;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+
+import org.example.dao.StudentDAO;
+import org.example.dao.UserDAO;
+import org.example.model.Student;
+import org.example.model.User;
+import org.example.utils.PasswordUtil;
+
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 public class InscriptionController {
 
     // Champs du formulaire liés au FXML
     @FXML
-    private TextField INEField;
-
-    @FXML
     private TextField NomField;
 
     @FXML
     private TextField prenomField;
-
-    @FXML
-    private TextField etablissementField;
 
     @FXML
     private TextField mailField;
@@ -31,20 +38,80 @@ public class InscriptionController {
     private void sInscrire() {
 
         // Récupération des valeurs des champs
-        String INE = INEField.getText().trim();
         String nom = NomField.getText().trim();
         String prenom = prenomField.getText().trim();
-        String etablissement = etablissementField.getText().trim();
         String mail = mailField.getText().trim();
         String motDePasse = motDePasseField.getText().trim();
 
         // Vérification que les champs obligatoires ne sont pas vides
         if (nom.isEmpty() || prenom.isEmpty() || mail.isEmpty() || motDePasse.isEmpty()) {
-            System.out.println("Veuillez remplir tous les champs obligatoires.");
+            Alert a = new Alert(Alert.AlertType.WARNING, "Veuillez remplir tous les champs obligatoires.");
+            a.showAndWait();
             return;
         }
 
-        // TODO : Appeler le service d'inscription pour enregistrer l'utilisateur
-        System.out.println("Inscription de : " + nom + " " + prenom);
+        // Vérifier unicité de l'email
+        UserDAO userDAO = new UserDAO();
+        if (userDAO.emailExists(mail)) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "Cet email est déjà utilisé.");
+            a.showAndWait();
+            return;
+        }
+
+        // Créer et enregistrer le User
+        User user = new User();
+        user.setNomUsers(nom);
+        user.setPrenomUser(prenom);
+        user.setEmailUser(mail);
+        user.setMotPasseHash(PasswordUtil.hashPassword(motDePasse));
+        user.setStatut("ACTIF");
+        user.setDateCreation(LocalDateTime.now());
+        user.setRoleId(2); // 2 = étudiant (à ajuster si besoin)
+
+        boolean created = userDAO.inscrire(user);
+        if (!created) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Erreur lors de la création du compte.");
+            a.showAndWait();
+            return;
+        }
+
+        // Récupérer l'utilisateur créé pour obtenir son id
+        User createdUser = userDAO.findByEmail(mail);
+        if (createdUser == null) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Impossible de récupérer l'utilisateur créé.");
+            a.showAndWait();
+            return;
+        }
+
+        // Créer l'entité Student liée
+        Student student = new Student(
+                0,
+                nom,
+                prenom,
+                mail,
+                "", // ecole
+                "", // telephone
+                "", // dateEntree
+                "", // dateSortie
+                createdUser.getIdUsers()
+        );
+
+        StudentDAO studentDAO = new StudentDAO();
+        studentDAO.createStudent(student);
+
+        Alert success = new Alert(Alert.AlertType.INFORMATION, "Inscription réussie ! Redirection vers la page principale...");
+        success.showAndWait();
+
+        // Rediriger vers le dashboard
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) mailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setMaximized(true);
+        } catch (IOException e) {
+            Alert a = new Alert(Alert.AlertType.ERROR, "Erreur lors de la redirection : " + e.getMessage());
+            a.showAndWait();
+        }
     }
 }

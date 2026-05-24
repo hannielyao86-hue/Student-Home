@@ -305,3 +305,15 @@ CREATE TABLE affectations (
                               affectation_date DATE NOT NULL
 );
 
+ALTER TABLE students
+DROP COLUMN numero_etudiant;
+
+ALTER TABLE students
+    ADD nom VARCHAR(100);
+
+ALTER TABLE students
+    ADD prenom VARCHAR(100);
+
+ALTER TABLE students
+    ADD email VARCHAR(150);
+

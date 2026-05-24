@@ -266,13 +266,44 @@ public class DashboardController {
     // =====================================================
     // NAVIGATION → PAIEMENTS
     // =====================================================
-
     @FXML
     public void handlePaiements() {
 
-        System.out.println(
-                "→ Module Paiements"
-        );
+        System.out.println("→ Chargement paiements...");
+
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/view/paiements.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load());
+
+            Stage stage =
+                    (Stage) nbEtudiantsLabel
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle(
+                    "Gestion des Paiements"
+            );
+
+            stage.setMaximized(true);
+
+            System.out.println("✅ Paiements chargés");
+
+        } catch (Exception e) {
+
+            System.out.println("❌ Erreur paiements");
+
+            e.printStackTrace();
+        }
     }
 
     // =====================================================

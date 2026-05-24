@@ -1,16 +1,23 @@
 package org.example.controller;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.example.dao.AffectationDAO;
 import org.example.dao.RoomDAO;
+import org.example.dao.StudentDAO;
+import org.example.model.Affectation;
 import org.example.model.Room;
+import org.example.model.Student;
 import org.example.service.AuthService;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,8 +28,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -31,6 +41,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 public class LogementsController {
 
@@ -56,9 +67,13 @@ public class LogementsController {
     @FXML
     private Label roomStatusLabel;
     @FXML
+    private TextField searchField;
+    @FXML
     private FlowPane roomsFlowPane;
 
     private final Map<String, RoomInfo> roomDetails = new HashMap<>();
+    private final List<Room> allRooms = new ArrayList<>();
+    private Room selectedRoom;
 
     @FXML
     public void initialize() {
@@ -72,6 +87,9 @@ public class LogementsController {
                 roleLabel.setText("Rôle ID : 1");
             }
             initializeRoomDetails();
+            if (searchField != null) {
+                searchField.textProperty().addListener((obs, oldValue, newValue) -> filterRooms(newValue));
+            }
             if (!roomDetails.isEmpty()) {
                 String firstRoom = roomDetails.keySet().iterator().next();
                 updateRoomDetail(roomDetails.get(firstRoom));
@@ -90,6 +108,9 @@ public class LogementsController {
         if (roomsFlowPane != null) {
             roomsFlowPane.getChildren().clear();
         }
+        roomDetails.clear();
+        allRooms.clear();
+        selectedRoom = null;
 
         RoomDAO roomDAO = new RoomDAO();
         List<Room> rooms = roomDAO.getAllRooms();
@@ -99,11 +120,32 @@ public class LogementsController {
             return;
         }
 
+        allRooms.addAll(rooms);
         for (Room room : rooms) {
+            allRooms.add(room);
             RoomInfo info = createRoomInfoFromRoom(room);
             roomDetails.put(room.getNumeroRoom(), info);
             createRoomCard(room, info);
         }
+    }
+
+    private void filterRooms(String query) {
+        if (roomsFlowPane == null) {
+            return;
+        }
+        roomsFlowPane.getChildren().clear();
+        if (query == null || query.isBlank()) {
+            allRooms.forEach(room -> createRoomCard(room, createRoomInfoFromRoom(room)));
+            return;
+        }
+
+        String normalized = query.trim().toUpperCase();
+        allRooms.stream()
+                .filter(room -> room.getNumeroRoom().toUpperCase().contains(normalized)
+                        || room.getTypeRoom().toUpperCase().contains(normalized)
+                        || (room.getStatutRoom() != null && room.getStatutRoom().toUpperCase().contains(normalized))
+                        || String.valueOf(room.getLoyer()).contains(normalized))
+                .forEach(room -> createRoomCard(room, createRoomInfoFromRoom(room)));
     }
 
     private void createRoomCard(Room room, RoomInfo info) {
@@ -118,7 +160,7 @@ public class LogementsController {
                 " -fx-text-fill: white;" +
                 " -fx-padding: 0;"
         );
-        roomButton.setUserData(room.getNumeroRoom());
+        roomButton.setUserData(room);
         roomButton.setOnAction(this::handleRoomClick);
 
         Label status = new Label(info.status());
@@ -155,13 +197,13 @@ public class LogementsController {
         }
         String normalized = statut.trim().toUpperCase();
         if (normalized.contains("LIBRE")) {
-            return "#2ecc71";
+            return "#27ae60"; // vert uniforme
         }
         if (normalized.contains("OCCUPE")) {
-            return "#e74c3c";
+            return "#c0392b"; // rouge vif uniforme
         }
         if (normalized.contains("RESERVE") || normalized.contains("RÉSERVÉ") || normalized.contains("RESERVÉ")) {
-            return "#f1c40f";
+            return "#f39c12"; // jaune orangé uniforme
         }
         return "#7f8c8d";
     }
@@ -173,13 +215,13 @@ public class LogementsController {
 
         if (statut.equalsIgnoreCase("LIBRE")) {
             statusLabel = "Libre";
-            statusColor = "#2ecc71";
+            statusColor = "#27ae60";
         } else if (statut.equalsIgnoreCase("OCCUPEE") || statut.equalsIgnoreCase("OCCUPE")) {
             statusLabel = "Occupé";
-            statusColor = "#e74c3c";
+            statusColor = "#c0392b";
         } else if (statut.equalsIgnoreCase("RESERVE") || statut.equalsIgnoreCase("RÉSERVÉ") || statut.equalsIgnoreCase("RESERVÉ")) {
             statusLabel = "Réservé";
-            statusColor = "#f1c40f";
+            statusColor = "#f39c12";
         } else {
             statusLabel = statut;
             statusColor = "#7f8c8d";
@@ -241,7 +283,17 @@ public class LogementsController {
     @FXML
     public void handleRoomClick(ActionEvent event) {
         Button source = (Button) event.getSource();
-        String roomNumber = extractRoomNumber(source);
+        Object userData = source.getUserData();
+        if (userData instanceof Room room) {
+            selectedRoom = room;
+        } else {
+            String roomNumber = extractRoomNumber(source);
+            selectedRoom = allRooms.stream()
+                    .filter(r -> r.getNumeroRoom().equals(roomNumber))
+                    .findFirst()
+                    .orElse(null);
+        }
+        String roomNumber = selectedRoom != null ? selectedRoom.getNumeroRoom() : extractRoomNumber(source);
         System.out.println("→ Chambre sélectionnée : " + roomNumber);
         RoomInfo info = roomDetails.getOrDefault(roomNumber, createDefaultRoom(roomNumber));
         updateRoomDetail(info);
@@ -249,6 +301,9 @@ public class LogementsController {
 
     private String extractRoomNumber(Button button) {
         Object userData = button.getUserData();
+        if (userData instanceof Room room) {
+            return room.getNumeroRoom();
+        }
         if (userData instanceof String roomNumber) {
             return roomNumber;
         }
@@ -382,7 +437,162 @@ public class LogementsController {
 
     @FXML
     public void handleModifier(ActionEvent event) {
-        System.out.println("→ Modifier la chambre");
+        if (selectedRoom == null) {
+            showAlert(Alert.AlertType.WARNING, "Aucune chambre", "Veuillez sélectionner une chambre.");
+            return;
+        }
+
+        Dialog<Room> dialog = new Dialog<>();
+        dialog.setTitle("Modifier chambre " + selectedRoom.getNumeroRoom());
+        dialog.setHeaderText("Modifiez le loyer et le statut de la chambre");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField loyerField = new TextField();
+        loyerField.setText(String.valueOf(selectedRoom.getLoyer()));
+        loyerField.setPromptText("Ex: 2500");
+
+        ComboBox<String> statusCombo = new ComboBox<>(FXCollections.observableArrayList("LIBRE", "OCCUPEE", "RESERVE"));
+        statusCombo.setValue(selectedRoom.getStatutRoom() != null ? selectedRoom.getStatutRoom() : "LIBRE");
+
+        grid.add(new Label("Loyer:"), 0, 0);
+        grid.add(loyerField, 1, 0);
+        grid.add(new Label("Statut:"), 0, 1);
+        grid.add(statusCombo, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                try {
+                    double newLoyer = Double.parseDouble(loyerField.getText().trim());
+                    String newStatus = statusCombo.getValue();
+
+                    selectedRoom.setLoyer(newLoyer);
+                    selectedRoom.setStatutRoom(newStatus);
+
+                    RoomDAO roomDAO = new RoomDAO();
+                    boolean updated = roomDAO.updateRoom(selectedRoom);
+
+                    if (updated) {
+                        showAlert(Alert.AlertType.INFORMATION, "Succès", "Chambre mise à jour avec succès.");
+                        initializeRoomDetails();
+                        updateRoomDetail(createRoomInfoFromRoom(selectedRoom));
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la mise à jour.");
+                    }
+                } catch (NumberFormatException e) {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Le loyer doit être un nombre valide.");
+                }
+                return selectedRoom;
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
+    }
+
+    @FXML
+    public void handleAffecterRoom(ActionEvent event) {
+        if (selectedRoom == null) {
+            showAlert(Alert.AlertType.WARNING, "Affectation impossible", "Sélectionne d'abord une chambre.");
+            return;
+        }
+
+        if (!"LIBRE".equalsIgnoreCase(selectedRoom.getStatutRoom())) {
+            showAlert(Alert.AlertType.WARNING, "Affectation impossible", "La chambre doit être libre pour être affectée.");
+            return;
+        }
+
+        List<Student> students = new StudentDAO().getAllStudents();
+        if (students.isEmpty()) {
+            showAlert(Alert.AlertType.WARNING, "Aucun étudiant", "Veuillez ajouter au moins un étudiant avant d'affecter une chambre.");
+            return;
+        }
+
+        Dialog<Affectation> dialog = new Dialog<>();
+        dialog.setTitle("Affecter une chambre");
+        dialog.setHeaderText("Affecter " + selectedRoom.getNumeroRoom() + " à un étudiant");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        ComboBox<Student> studentCombo = new ComboBox<>(FXCollections.observableArrayList(students));
+        studentCombo.setPrefWidth(320);
+        studentCombo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Student student) {
+                return student == null ? "" : student.getNom() + " " + student.getPrenom() + " (" + student.getIdStudent() + ")";
+            }
+
+            @Override
+            public Student fromString(String string) {
+                return null;
+            }
+        });
+        studentCombo.setCellFactory(listView -> new ListCell<>() {
+            @Override
+            protected void updateItem(Student student, boolean empty) {
+                super.updateItem(student, empty);
+                setText(empty || student == null ? "" : student.getNom() + " " + student.getPrenom() + " (" + student.getIdStudent() + ")");
+            }
+        });
+        studentCombo.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(Student student, boolean empty) {
+                super.updateItem(student, empty);
+                setText(empty || student == null ? "" : student.getNom() + " " + student.getPrenom() + " (" + student.getIdStudent() + ")");
+            }
+        });
+        studentCombo.getSelectionModel().selectFirst();
+
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.add(new Label("Étudiant:"), 0, 0);
+        grid.add(studentCombo, 1, 0);
+        grid.add(new Label("Date affectation:"), 0, 1);
+        grid.add(datePicker, 1, 1);
+
+        Node okButton = dialog.getDialogPane().lookupButton(ButtonType.OK);
+        okButton.setDisable(studentCombo.getSelectionModel().getSelectedItem() == null);
+
+        studentCombo.valueProperty().addListener((obs, oldValue, newValue) -> okButton.setDisable(newValue == null));
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Affectation(
+                        studentCombo.getSelectionModel().getSelectedItem(),
+                        selectedRoom,
+                        datePicker.getValue() != null ? datePicker.getValue().toString() : LocalDate.now().toString()
+                );
+            }
+            return null;
+        });
+
+        Optional<Affectation> result = dialog.showAndWait();
+        result.ifPresent(affectation -> {
+            new AffectationDAO().createAffectation(affectation);
+            String roomNumber = selectedRoom.getNumeroRoom();
+            initializeRoomDetails();
+            selectedRoom = allRooms.stream()
+                    .filter(r -> r.getNumeroRoom().equals(roomNumber))
+                    .findFirst()
+                    .orElse(null);
+            if (selectedRoom != null) {
+                RoomInfo updatedInfo = createRoomInfoFromRoom(selectedRoom);
+                updateRoomDetail(updatedInfo);
+                roomNomLabel.setText(affectation.getStudent().getNom() + " " + affectation.getStudent().getPrenom());
+                roomContactLabel.setText(affectation.getStudent().getEmail() + " / " + affectation.getStudent().getTelephone());
+            }
+            showAlert(Alert.AlertType.INFORMATION, "Affectation réussie", "La chambre a été affectée à " + affectation.getStudent().getNom() + " " + affectation.getStudent().getPrenom() + ".");
+        });
     }
 
     @FXML
