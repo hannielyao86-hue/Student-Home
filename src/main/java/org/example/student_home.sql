@@ -132,22 +132,31 @@ CREATE TABLE IF NOT EXISTS `payments` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `reservations`
+-- DROP TABLE IF EXISTS `reservations`;
 --
-
-DROP TABLE IF EXISTS `reservations`;
-CREATE TABLE IF NOT EXISTS `reservations` (
-  `id_reservation` varchar(250) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `date_reservation` date NOT NULL,
-  `heure_debut` time NOT NULL,
-  `heure_fin` time NOT NULL,
-  `statut_reservation` varchar(250) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `id_common_speace` int NOT NULL,
-  `id_student` int NOT NULL,
-  PRIMARY KEY (`id_reservation`),
-  KEY `id_common_speace` (`id_common_speace`),
-  KEY `id_student` (`id_student`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+-- CREATE TABLE IF NOT EXISTS `reservations` (
+--
+--   `id_reservation` INT NOT NULL AUTO_INCREMENT,
+--
+--   `date_reservation` DATE NOT NULL,
+--
+--   `heure_debut` TIME NOT NULL,
+--
+--   `heure_fin` TIME NOT NULL,
+--
+--   `statut_reservation` VARCHAR(250) NOT NULL,
+--
+--   `id_common_speace` INT NOT NULL,
+--
+--   `id_student` INT NOT NULL,
+--
+--   PRIMARY KEY (`id_reservation`),
+--
+--   KEY `id_common_speace` (`id_common_speace`),
+--
+--   KEY `id_student` (`id_student`)
+--
+-- ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
 -- --------------------------------------------------------
 
