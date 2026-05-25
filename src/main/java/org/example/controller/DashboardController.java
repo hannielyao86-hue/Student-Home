@@ -313,14 +313,40 @@ public class DashboardController {
     @FXML
     public void handleIncidents() {
 
-        System.out.println(
-                "→ Module Incidents"
-        );
-    }
+        System.out.println("→ Chargement incidents...");
 
-    // =====================================================
-    // DÉCONNEXION
-    // =====================================================
+        try {
+
+            FXMLLoader loader =
+                    new FXMLLoader(
+                            getClass().getResource(
+                                    "/view/incident.fxml"
+                            )
+                    );
+
+            Scene scene =
+                    new Scene(loader.load());
+
+            Stage stage =
+                    (Stage) nbEtudiantsLabel
+                            .getScene()
+                            .getWindow();
+
+            stage.setScene(scene);
+
+            stage.setTitle("Gestion des Incidents");
+
+            stage.setMaximized(true);
+
+            System.out.println("✅ Incidents chargés");
+
+        } catch (Exception e) {
+
+            System.out.println("❌ Erreur incidents");
+
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     public void handleLogout() {
