@@ -308,3 +308,9 @@ ALTER TABLE students
 ALTER TABLE students
     ADD email VARCHAR(150);
 
+
+<!-- hbox
+    <HBox spacing="20" alignment="CENTER"
+          style="-fx-padding: 30;"
+          HBox.hgrow="ALWAYS">
+-->

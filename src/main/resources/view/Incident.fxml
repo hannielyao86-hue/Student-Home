@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.example.controller.IncidentController"
+           style="-fx-background-color: #d9d9d9;"
+           prefWidth="900" prefHeight="780">
+
+    <HBox spacing="20" alignment="CENTER" style="-fx-padding: 30;">
+
+        <!-- FORMULAIRE -->
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-padding: 30;"
+              prefWidth="400">
+
+            <Label text="Signaler un incident"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+
+            <!-- Type d'incident -->
+            <Label text="Type d'incident" alignment="CENTER_LEFT"/>
+            <ComboBox fx:id="typeIncidentCombo" maxWidth="340"
+                      promptText="Choisir un type"/>
+
+            <!-- Date -->
+            <Label text="Date de l'incident" alignment="CENTER_LEFT"/>
+            <DatePicker fx:id="datePicker" maxWidth="340"/>
+
+            <!-- Niveau de priorité -->
+            <Label text="Niveau de priorité" alignment="CENTER_LEFT"/>
+            <ComboBox fx:id="urgenceCombo" maxWidth="340"
+                      promptText="Choisir un niveau"/>
+
+            <!-- Description -->
+            <Label text="Description de l'incident" alignment="CENTER_LEFT"/>
+            <TextArea fx:id="descriptionField"
+                      maxWidth="340" prefHeight="100"
+                      wrapText="true"
+                      style="-fx-background-color: #d9d9d9; -fx-border-color: transparent;"/>
+
+            <!-- Message -->
+            <Label fx:id="messageLabel" textFill="red"/>
+
+            <!-- Bouton -->
+            <Button text="Signaler l'incident"
+                    onAction="#signalerIncident"
+                    prefWidth="200" prefHeight="40"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                           -fx-font-size: 14px; -fx-cursor: hand; -fx-translate-y: 10;"/>
+        </VBox>
+
+        <!-- LISTE DES INCIDENTS -->
+        <VBox spacing="10"
+              style="-fx-background-color: white; -fx-padding: 30;"
+              HBox.hgrow="ALWAYS">
+
+            <Label text="Incidents signalés"
+                   style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+
+            <ScrollPane fitToWidth="true" prefHeight="650"
+                        VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent;">
+                <VBox fx:id="listeIncidents" spacing="10"/>
+            </ScrollPane>
+
+        </VBox>
+
+    </HBox>
+
+</StackPane>
