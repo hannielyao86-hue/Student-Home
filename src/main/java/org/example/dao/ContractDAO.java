@@ -1,10 +1,11 @@
 package org.example.dao;
 
-import org.example.config.DatabaseConnection;
-import org.example.model.Contract;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.example.config.DatabaseConnection;
+import org.example.model.Contract;
 
 /**
  * DAO Contract
@@ -48,5 +49,36 @@ public class ContractDAO {
 
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Retourne le dernier contrat (par date_debut) pour une chambre donnée
+     */
+    public Contract getLatestContractByRoom(int roomId) {
+        String sql = "SELECT * FROM contract WHERE id_room = ? ORDER BY _date_debut DESC LIMIT 1";
+        try (
+                Connection connection = DatabaseConnection.getInstance().getConnection();
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, roomId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new Contract(
+                            rs.getString("id_contract"),
+                            rs.getDate("_date_debut").toString(),
+                            rs.getDate("date_fin").toString(),
+                            rs.getDouble("caution"),
+                            rs.getString("statut_contract"),
+                            rs.getString("id_payment"),
+                            rs.getInt("id_room"),
+                            rs.getInt("id_student")
+                    );
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("ContractDAO getLatestContractByRoom error: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 }

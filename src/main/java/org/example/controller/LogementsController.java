@@ -9,9 +9,11 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.example.dao.AffectationDAO;
+import org.example.dao.ContractDAO;
 import org.example.dao.RoomDAO;
 import org.example.dao.StudentDAO;
 import org.example.model.Affectation;
+import org.example.model.Contract;
 import org.example.model.Room;
 import org.example.model.Student;
 import org.example.service.AuthService;
@@ -227,13 +229,48 @@ public class LogementsController {
             statusColor = "#7f8c8d";
         }
 
+        String contractStart = "--";
+        String contractEnd = "--";
+        String residentName = "Aucun résident";
+        String contact = "--";
+
+        try {
+            ContractDAO contractDAO = new ContractDAO();
+            org.example.model.Contract contract = contractDAO.getLatestContractByRoom(room.getIdRoom());
+            if (contract != null) {
+                contractStart = contract.getStartDate() != null ? contract.getStartDate() : "--";
+                contractEnd = contract.getEndDate() != null ? contract.getEndDate() : "--";
+
+                int studentId = contract.getIdStudent();
+                if (studentId > 0) {
+                    Student s = new StudentDAO().getStudentById(studentId);
+                    if (s != null) {
+                        residentName = s.getNom() + " " + s.getPrenom();
+                        contact = s.getEmail() + " / " + s.getTelephone();
+                    }
+                }
+            } else {
+                // Pas de contrat : chercher la dernière affectation pour afficher l'étudiant
+                Integer lastStudentId = new AffectationDAO().getLatestAffectationStudentId(room.getIdRoom());
+                if (lastStudentId != null && lastStudentId > 0) {
+                    Student s = new StudentDAO().getStudentById(lastStudentId);
+                    if (s != null) {
+                        residentName = s.getNom() + " " + s.getPrenom();
+                        contact = s.getEmail() + " / " + s.getTelephone();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lecture contrat/chambre: " + e.getMessage());
+        }
+
         return new RoomInfo(
                 room.getNumeroRoom(),
                 statusLabel,
-                "Aucun résident",
-                "--",
-                "--",
-                "--",
+                residentName,
+                contact,
+                contractStart,
+                contractEnd,
                 String.format("%.2f €", room.getLoyer()),
                 statusLabel,
                 statusColor
@@ -444,7 +481,7 @@ public class LogementsController {
 
         Dialog<Room> dialog = new Dialog<>();
         dialog.setTitle("Modifier chambre " + selectedRoom.getNumeroRoom());
-        dialog.setHeaderText("Modifiez le loyer et le statut de la chambre");
+        dialog.setHeaderText("Modifiez le statut, la date d'entrée et la date de sortie (contrat)");
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
@@ -452,42 +489,58 @@ public class LogementsController {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField loyerField = new TextField();
-        loyerField.setText(String.valueOf(selectedRoom.getLoyer()));
-        loyerField.setPromptText("Ex: 2500");
-
         ComboBox<String> statusCombo = new ComboBox<>(FXCollections.observableArrayList("LIBRE", "OCCUPEE", "RESERVE"));
         statusCombo.setValue(selectedRoom.getStatutRoom() != null ? selectedRoom.getStatutRoom() : "LIBRE");
 
-        grid.add(new Label("Loyer:"), 0, 0);
-        grid.add(loyerField, 1, 0);
-        grid.add(new Label("Statut:"), 0, 1);
-        grid.add(statusCombo, 1, 1);
+        DatePicker startDatePicker = new DatePicker();
+        DatePicker endDatePicker = new DatePicker();
+
+        grid.add(new Label("Statut:"), 0, 0);
+        grid.add(statusCombo, 1, 0);
+        grid.add(new Label("Date entrée (contrat):"), 0, 1);
+        grid.add(startDatePicker, 1, 1);
+        grid.add(new Label("Date sortie (contrat):"), 0, 2);
+        grid.add(endDatePicker, 1, 2);
 
         dialog.getDialogPane().setContent(grid);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == ButtonType.OK) {
-                try {
-                    double newLoyer = Double.parseDouble(loyerField.getText().trim());
-                    String newStatus = statusCombo.getValue();
+                String newStatus = statusCombo.getValue();
 
-                    selectedRoom.setLoyer(newLoyer);
-                    selectedRoom.setStatutRoom(newStatus);
+                selectedRoom.setStatutRoom(newStatus);
 
-                    RoomDAO roomDAO = new RoomDAO();
-                    boolean updated = roomDAO.updateRoom(selectedRoom);
+                // Mettre à jour la chambre
+                RoomDAO roomDAO = new RoomDAO();
+                boolean updated = roomDAO.updateRoom(selectedRoom);
 
-                    if (updated) {
-                        showAlert(Alert.AlertType.INFORMATION, "Succès", "Chambre mise à jour avec succès.");
-                        initializeRoomDetails();
-                        updateRoomDetail(createRoomInfoFromRoom(selectedRoom));
-                    } else {
-                        showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la mise à jour.");
-                    }
-                } catch (NumberFormatException e) {
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "Le loyer doit être un nombre valide.");
+                // Créer un contrat si des dates sont fournies
+                if (startDatePicker.getValue() != null || endDatePicker.getValue() != null) {
+                    String idContract = "CTR" + System.currentTimeMillis();
+                    String start = startDatePicker.getValue() != null ? startDatePicker.getValue().toString() : "";
+                    String end = endDatePicker.getValue() != null ? endDatePicker.getValue().toString() : "";
+
+                    Contract contract = new Contract(
+                            idContract,
+                            start,
+                            end,
+                            0.0,
+                            newStatus,
+                            "NONE",
+                            selectedRoom.getIdRoom(),
+                            0
+                    );
+                    new ContractDAO().createContract(contract);
                 }
+
+                if (updated) {
+                    showAlert(Alert.AlertType.INFORMATION, "Succès", "Chambre mise à jour avec succès.");
+                    initializeRoomDetails();
+                    updateRoomDetail(createRoomInfoFromRoom(selectedRoom));
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Erreur", "Erreur lors de la mise à jour.");
+                }
+
                 return selectedRoom;
             }
             return null;
@@ -579,17 +632,23 @@ public class LogementsController {
         Optional<Affectation> result = dialog.showAndWait();
         result.ifPresent(affectation -> {
             new AffectationDAO().createAffectation(affectation);
-            String roomNumber = selectedRoom.getNumeroRoom();
-            initializeRoomDetails();
-            selectedRoom = allRooms.stream()
-                    .filter(r -> r.getNumeroRoom().equals(roomNumber))
+            
+            // Recharger juste la chambre affectée sans réinitialiser toutes les cartes
+            RoomDAO roomDAO = new RoomDAO();
+            List<Room> updatedRooms = roomDAO.getAllRooms();
+            int roomId = selectedRoom.getIdRoom();
+            selectedRoom = updatedRooms.stream()
+                    .filter(r -> r.getIdRoom() == roomId)
                     .findFirst()
-                    .orElse(null);
+                    .orElse(selectedRoom);
+
             if (selectedRoom != null) {
                 RoomInfo updatedInfo = createRoomInfoFromRoom(selectedRoom);
                 updateRoomDetail(updatedInfo);
-                roomNomLabel.setText(affectation.getStudent().getNom() + " " + affectation.getStudent().getPrenom());
-                roomContactLabel.setText(affectation.getStudent().getEmail() + " / " + affectation.getStudent().getTelephone());
+                
+                Student student = affectation.getStudent();
+                roomNomLabel.setText(student.getNom() + " " + student.getPrenom());
+                roomContactLabel.setText(student.getEmail() + " / " + student.getTelephone());
             }
             showAlert(Alert.AlertType.INFORMATION, "Affectation réussie", "La chambre a été affectée à " + affectation.getStudent().getNom() + " " + affectation.getStudent().getPrenom() + ".");
         });
