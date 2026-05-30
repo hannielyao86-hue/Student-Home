@@ -320,7 +320,7 @@ public class DashboardController {
             FXMLLoader loader =
                     new FXMLLoader(
                             getClass().getResource(
-                                    "/view/incident.fxml"
+                                    "/view/Incident.fxml"
                             )
                     );
 

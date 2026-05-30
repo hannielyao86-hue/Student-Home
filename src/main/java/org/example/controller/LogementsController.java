@@ -278,33 +278,27 @@ public class LogementsController {
     }
 
     @FXML
-    public void handleDashboard(ActionEvent event) {
-        loadPage("/view/dashboard.fxml");
+    public void handleEtudiants(ActionEvent event) {
+        loadPage("/view/students.fxml");
     }
 
     @FXML
-    public void handleAjouterRoom(ActionEvent event) {
+    public void handleAjouterRoom() {
         showAddRoomDialog();
     }
-
-    @FXML
-    public void handleEtudiants(ActionEvent event) {
-        System.out.println("→ Module Étudiants (Sprint 2)");
-    }
-
-    @FXML
-    public void handleLogements(ActionEvent event) {
-        System.out.println("Vous êtes déjà sur la page Logements.");
-    }
-
     @FXML
     public void handlePaiements(ActionEvent event) {
-        System.out.println("→ Module Paiements (Sprint 2)");
+        loadPage("/view/paiements.fxml");
     }
 
     @FXML
     public void handleIncidents(ActionEvent event) {
-        System.out.println("→ Module Incidents (Sprint 2)");
+        loadPage("/view/Incident.fxml");
+    }
+
+    @FXML
+    public void handleDashboard(ActionEvent event) {
+        loadPage("/view/dashboard.fxml");
     }
 
     @FXML
