@@ -391,12 +391,12 @@ public class StudentController {
 
     @FXML
     public void handlePaiements() {
-        loadPage("/view/payments.fxml");
+        loadPage("/view/paiements.fxml");
     }
 
     @FXML
     public void handleIncidents() {
-        loadPage("/view/incidents.fxml");
+        loadPage("/view/Incident.fxml");
     }
 
     private void loadPage(String fxmlPath) {

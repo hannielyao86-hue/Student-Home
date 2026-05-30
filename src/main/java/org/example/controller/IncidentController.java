@@ -7,7 +7,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 import org.example.dao.IncidentDAO;
-import org.example.dao.StudentDAO;
 import org.example.model.Incident;
 
 import java.time.LocalDate;
@@ -16,65 +15,45 @@ import java.util.List;
 
 public class IncidentController {
 
-    // Champs du formulaire
     @FXML private ComboBox<String> typeIncidentCombo;
     @FXML private TextArea descriptionField;
     @FXML private ComboBox<String> urgenceCombo;
     @FXML private DatePicker datePicker;
     @FXML private Label messageLabel;
-
-    // Conteneur de la liste des incidents
     @FXML private VBox listeIncidents;
 
-    // DAO
-    private IncidentDAO incidentDAO = new IncidentDAO();
-
-    // Id étudiant connecté (à remplacer par la session utilisateur)
-    private int idStudentConnecte = 1; // TEMPORAIRE
+    private IncidentDAO IncidentDAO = new IncidentDAO();
+    private int idStudentConnecte = 1;
 
     @FXML
     public void initialize() {
-
-        // Types d'incidents
         typeIncidentCombo.getItems().addAll(
                 "Plomberie", "Électricité", "Serrure",
                 "Chauffage", "Internet", "Autre"
         );
-
-        // Niveaux de priorité
         urgenceCombo.getItems().addAll("Faible", "Moyen", "Élevé", "Critique");
-
-        // Charger les incidents existants
         chargerIncidents();
     }
 
     @FXML
     private void signalerIncident() {
-
         String typeIncident = typeIncidentCombo.getValue();
         String description  = descriptionField.getText().trim();
         String priorite     = urgenceCombo.getValue();
         LocalDate date      = datePicker.getValue();
 
-        // Validation
         if (typeIncident == null || description.isEmpty()
                 || priorite == null || date == null) {
             messageLabel.setText("⚠️ Veuillez remplir tous les champs.");
             return;
         }
 
-        // Création de l'incident
         Incident incident = new Incident(
-                typeIncident,
-                description,
-                priorite,
-                "En cours",       // statut par défaut
-                date,
-                idStudentConnecte
+                typeIncident, description, priorite,
+                "En cours", date, idStudentConnecte
         );
 
-        // Sauvegarde
-        boolean succes = incidentDAO.sauvegarder(incident);
+        boolean succes = IncidentDAO.sauvegarder(incident);
 
         if (succes) {
             ajouterIncidentDansListe(incident);
@@ -87,8 +66,90 @@ public class IncidentController {
         }
     }
 
-    private void ajouterIncidentDansListe(Incident incident) {
+    // ✅ Méthodes de navigation — BIEN en dehors de signalerIncident()
 
+    @FXML
+    private void handleDashboard() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/dashboard.fxml"));
+            javafx.scene.Parent root = loader.load();
+            listeIncidents.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleEtudiants() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/students.fxml"));
+            javafx.scene.Parent root = loader.load();
+            listeIncidents.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleLogements() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/logements.fxml"));
+            javafx.scene.Parent root = loader.load();
+            listeIncidents.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handlePaiements() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/paiements.fxml"));
+            javafx.scene.Parent root = loader.load();
+            listeIncidents.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void handleIncidents() {
+        // Déjà sur cette page
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("/view/login.fxml"));
+            javafx.scene.Parent root = loader.load();
+            listeIncidents.getScene().setRoot(root);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    // ✅ ICI — entre les handle et les méthodes privées
+    private void loadPage(String fxmlPath) {
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource(fxmlPath));
+            javafx.stage.Stage stage = (javafx.stage.Stage)
+                    listeIncidents.getScene().getWindow();
+            stage.setScene(new javafx.scene.Scene(loader.load()));
+            stage.setMaximized(true);
+        } catch (Exception e) {
+            System.out.println("❌ Erreur chargement page : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void ajouterIncidentDansListe(Incident incident) {
         String couleur = switch (incident.getPriorite()) {
             case "Faible"   -> "#2ecc71";
             case "Moyen"    -> "#f39c12";
@@ -101,7 +162,6 @@ public class IncidentController {
         carte.setStyle("-fx-background-color: #f9f9f9; -fx-padding: 15; " +
                 "-fx-border-color: " + couleur + "; -fx-border-width: 0 0 0 5;");
 
-        // En-tête
         HBox entete = new HBox(10);
         Label typeLabel = new Label(incident.getTypeIncident());
         typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
@@ -115,14 +175,12 @@ public class IncidentController {
 
         entete.getChildren().addAll(typeLabel, prioriteLabel, statutLabel);
 
-        // Date
         Label dateLabel = new Label(
                 incident.getDateSignalement()
                         .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
         );
         dateLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 12px;");
 
-        // Description
         Label descLabel = new Label(incident.getDescription());
         descLabel.setWrapText(true);
         descLabel.setStyle("-fx-font-size: 13px; -fx-padding: 5 0 0 0;");
@@ -132,7 +190,7 @@ public class IncidentController {
     }
 
     private void chargerIncidents() {
-        List<Incident> incidents = incidentDAO.getAll();
+        List<Incident> incidents = IncidentDAO.getAll();
         for (Incident incident : incidents) {
             ajouterIncidentDansListe(incident);
         }
