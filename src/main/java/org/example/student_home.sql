@@ -323,3 +323,18 @@ ALTER TABLE students
           style="-fx-padding: 30;"
           HBox.hgrow="ALWAYS">
 -->
+
+-- 1. On s'assure que le rôle ETUDIANT existe (ignore l'erreur si l'ID 2 existe déjà)
+INSERT IGNORE INTO `roles` (`id_roles`, `nom`) VALUES (2, 'ETUDIANT');
+
+-- 2. On supprime l'ancien étudiant de test pour repartir à neuf
+DELETE FROM `students` WHERE `id_users` = 2;
+DELETE FROM `users` WHERE `id_users` = 2;
+
+-- 3. On insère proprement l'utilisateur de test avec le mot de passe 'etudiant123'
+INSERT INTO `users` (`id_users`, `nom_users`, `prenom_user`, `email_user`, `mot_passe_hash`, `statut`, `date_creation`, `id_roles`)
+VALUES (2, 'Durand', 'Lucas', 'lucas@gmail.com', 'etudiant123', 'ACTIF', NOW(), 2);
+
+-- 4. On l'associe dans la table 'students'
+INSERT INTO `students` (`id_student`, `telephone`, `date_entree`, `date_sortie`, `id_users`, `nom`, `prenom`, `email`)
+VALUES (2, '0601020304', '2026-09-01', '2027-06-30', 2, 'Durand', 'Lucas', 'lucas@gmail.com');

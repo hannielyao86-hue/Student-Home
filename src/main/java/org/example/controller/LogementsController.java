@@ -650,7 +650,69 @@ public class LogementsController {
 
     @FXML
     public void handleGenererContrat(ActionEvent event) {
-        System.out.println("→ Générer le contrat");
+        if (selectedRoom == null) {
+            showAlert(Alert.AlertType.WARNING, "Aucune chambre", "Veuillez sélectionner une chambre.");
+            return;
+        }
+
+        try {
+            Contract contract = new ContractDAO().getLatestContractByRoom(selectedRoom.getIdRoom());
+            Student student = null;
+
+            if (contract != null && contract.getIdStudent() > 0) {
+                student = new StudentDAO().getStudentById(contract.getIdStudent());
+            }
+
+            if (student == null) {
+                Integer lastStudentId = new AffectationDAO().getLatestAffectationStudentId(selectedRoom.getIdRoom());
+                if (lastStudentId != null && lastStudentId > 0) {
+                    student = new StudentDAO().getStudentById(lastStudentId);
+                }
+            }
+
+            if (student == null) {
+                showAlert(Alert.AlertType.INFORMATION, "Aucune information", "Aucun étudiant trouvé pour cette chambre.");
+                return;
+            }
+
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Informations étudiant - " + selectedRoom.getNumeroRoom());
+            dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CLOSE);
+
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+
+            grid.add(new Label("ID Étudiant:"), 0, 0);
+            grid.add(new Label(String.valueOf(student.getIdStudent())), 1, 0);
+
+            grid.add(new Label("Nom:"), 0, 1);
+            grid.add(new Label(student.getNom()), 1, 1);
+
+            grid.add(new Label("Prénom:"), 0, 2);
+            grid.add(new Label(student.getPrenom()), 1, 2);
+
+            grid.add(new Label("Email:"), 0, 3);
+            grid.add(new Label(student.getEmail() != null ? student.getEmail() : "--"), 1, 3);
+
+            grid.add(new Label("Téléphone:"), 0, 4);
+            grid.add(new Label(student.getTelephone() != null ? student.getTelephone() : "--"), 1, 4);
+
+            if (contract != null) {
+                grid.add(new Label("Contrat - Début:"), 0, 5);
+                grid.add(new Label(contract.getStartDate() != null ? contract.getStartDate() : "--"), 1, 5);
+
+                grid.add(new Label("Contrat - Fin:"), 0, 6);
+                grid.add(new Label(contract.getEndDate() != null ? contract.getEndDate() : "--"), 1, 6);
+            }
+
+            dialog.getDialogPane().setContent(grid);
+            dialog.showAndWait();
+
+        } catch (Exception e) {
+            showAlert(Alert.AlertType.ERROR, "Erreur", "Impossible de récupérer les informations : " + e.getMessage());
+        }
     }
 
     private void loadPage(String fxmlPath) {
