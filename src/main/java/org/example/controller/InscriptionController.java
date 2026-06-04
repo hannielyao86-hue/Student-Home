@@ -96,22 +96,24 @@ public class InscriptionController {
                 createdUser.getIdUsers()
         );
 
-        StudentDAO studentDAO = new StudentDAO();
-        studentDAO.createStudent(student);
-
-        Alert success = new Alert(Alert.AlertType.INFORMATION, "Inscription réussie ! Redirection vers la page principale...");
+        Alert success = new Alert(Alert.AlertType.INFORMATION, "Inscription réussie ! Redirection vers la page de connexion...");
         success.showAndWait();
 
-        // Rediriger vers le dashboard
+        // CORRECTION : Rediriger vers la page de LOGIN et non le Dashboard Admin
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/dashboard.fxml"));
+            // Remplacer "/view/dashboard.fxml" par "/view/login.fxml"
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/login.fxml"));
             Parent root = loader.load();
-            Stage stage = (Stage) mailField.getScene().getWindow();
+
+            // Récupérer la fenêtre actuelle pour y injecter la scène de connexion
+            Stage stage = (Stage) NomField.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setMaximized(true);
+            stage.centerOnScreen(); // Recentrer proprement la petite fenêtre de login
+
         } catch (IOException e) {
             Alert a = new Alert(Alert.AlertType.ERROR, "Erreur lors de la redirection : " + e.getMessage());
             a.showAndWait();
+            e.printStackTrace();
         }
     }
 }
