@@ -48,11 +48,16 @@ public class AuthService {
             return false;
         }
 
-        // 3. Vérifier mot de passe avec BCrypt
-        boolean passwordValid = PasswordUtil.checkPassword(
-                password,
-                user.getMotPasseHash()
-        );
+        // 3. Vérifier mot de passe avec BCrypt si le hash le supporte,
+        //    sinon accepter le mot de passe en clair pour les comptes plus anciens.
+        boolean passwordValid = false;
+        String storedHash = user.getMotPasseHash();
+
+        if (storedHash != null && (storedHash.startsWith("$2a$") || storedHash.startsWith("$2b$") || storedHash.startsWith("$2y$"))) {
+            passwordValid = PasswordUtil.checkPassword(password, storedHash);
+        } else {
+            passwordValid = storedHash != null && storedHash.equals(password);
+        }
 
         if (!passwordValid) {
             System.out.println("❌ Mot de passe incorrect");

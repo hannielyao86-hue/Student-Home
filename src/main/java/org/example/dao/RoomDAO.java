@@ -43,6 +43,31 @@ public class RoomDAO {
         return rooms;
     }
 
+    public List<Room> getAvailableRooms() {
+        List<Room> rooms = new ArrayList<>();
+        String sql = "SELECT * FROM rooms WHERE statut_room = 'LIBRE' ORDER BY numero_room";
+
+        try (PreparedStatement ps = cnx.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                rooms.add(new Room(
+                        rs.getInt("id_room"),
+                        rs.getString("numero_room"),
+                        rs.getString("type_room"),
+                        rs.getInt("capaciter_room"),
+                        rs.getString("statut_room"),
+                        rs.getDouble("loyer")
+                ));
+            }
+
+        } catch (Exception e) {
+            System.err.println("RoomDAO getAvailableRooms error: " + e.getMessage());
+        }
+
+        return rooms;
+    }
+
     public boolean createRoom(Room room) {
         String sql = "INSERT INTO rooms " +
                 "(id_room, numero_room, type_room, capaciter_room, statut_room, loyer, id_residence, id_incident) " +

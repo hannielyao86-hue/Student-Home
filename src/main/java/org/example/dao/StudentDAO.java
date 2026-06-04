@@ -247,4 +247,35 @@ public class StudentDAO {
 
         return null;
     }
+
+    public Student getStudentByUserId(int idUsers) {
+        String sql = """
+            SELECT * FROM students
+            WHERE id_users = ?
+            LIMIT 1
+        """;
+
+        try (PreparedStatement ps = cnx.prepareStatement(sql)) {
+            ps.setInt(1, idUsers);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return new Student(
+                        rs.getInt("id_student"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("email"),
+                        rs.getString("ecole"),
+                        rs.getString("telephone"),
+                        rs.getString("date_entree"),
+                        rs.getString("date_sortie"),
+                        rs.getInt("id_users")
+                );
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Erreur getStudentByUserId : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
