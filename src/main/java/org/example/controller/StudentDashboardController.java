@@ -1,7 +1,6 @@
 package org.example.controller;
 
 import java.io.IOException;
-
 import org.example.model.User;
 import org.example.service.AuthService;
 
@@ -16,14 +15,12 @@ import javafx.stage.Stage;
 
 public class StudentDashboardController {
 
-    // Éléments injectés depuis le FXML (doivent avoir le même fx:id)
     @FXML private Circle avatarCircle;
     @FXML private Label studentNameLabel;
     @FXML private Label roomLabel;
     @FXML private Label welcomeLabel;
     @FXML private VBox dynamicContentArea;
 
-    // Boutons du menu pour pouvoir modifier leur style (ex: mettre en surbrillance l'actif)
     @FXML private Button btnHome;
     @FXML private Button btnProfil;
     @FXML private Button btnLogement;
@@ -31,9 +28,6 @@ public class StudentDashboardController {
     @FXML private Button btnIncident;
     @FXML private Button btnPaiement;
 
-    /**
-     * Méthode appelée automatiquement au chargement de la page
-     */
     @FXML
     public void initialize() {
         User currentUser = AuthService.getCurrentUser();
@@ -51,9 +45,6 @@ public class StudentDashboardController {
         loadSubPage("/view/student_home.fxml");
     }
 
-    /**
-     * Action du bouton : Tableau de bord
-     */
     @FXML
     public void showHome() {
         setButtonActive(btnHome);
@@ -62,59 +53,44 @@ public class StudentDashboardController {
         loadSubPage("/view/student_home.fxml");
     }
 
-    /**
-     * Action du bouton : Mon Profil
-     */
     @FXML
     public void showProfil() {
         setButtonActive(btnProfil);
-        welcomeLabel.setText("👤 Mon Profil Personnel");
+        welcomeLabel.setText("Mon Profil Personnel");
         loadSubPage("/view/student_profil.fxml");
     }
 
-    /**
-     * Action du bouton : Mon Logement
-     */
     @FXML
     public void showLogement() {
         setButtonActive(btnLogement);
-        welcomeLabel.setText("🛏️ Détails de mon Logement");
+        welcomeLabel.setText("Détails de mon Logement");
         loadSubPage("/view/student_logement.fxml");
     }
 
-    /**
-     * Action du bouton : Réservation
-     */
     @FXML
     public void showReservation() {
         setButtonActive(btnReservation);
-        welcomeLabel.setText("🛌 Réserver une chambre disponible");
+        welcomeLabel.setText("Réserver une chambre disponible");
         loadSubPage("/view/student_reservation.fxml");
     }
 
     /**
-     * Action du bouton : Signaler un incident
+     * CORRIGÉ : Appelle maintenant précisément ton fichier student_incident.fxml
      */
     @FXML
     public void showIncident() {
         setButtonActive(btnIncident);
-        welcomeLabel.setText("🛠️ Déclaration d'Incident");
+        welcomeLabel.setText("Déclaration d'Incident");
         loadSubPage("/view/student_incident.fxml");
     }
 
-    /**
-     * Action du bouton : Mes Paiements
-     */
     @FXML
     public void showPaiement() {
         setButtonActive(btnPaiement);
-        welcomeLabel.setText("💳 Suivi de mes Loyers & Paiements");
+        welcomeLabel.setText("Suivi de mes Loyers & Paiements");
         loadSubPage("/view/student_paiement.fxml");
     }
 
-    /**
-     * Action du bouton : Déconnexion
-     */
     @FXML
     public void handleLogout() {
         try {
@@ -131,24 +107,24 @@ public class StudentDashboardController {
     }
 
     /**
-     * Méthode utilitaire pour injecter une sous-page FXML au centre du Dashboard
+     * SÉCURISÉ : Utilise 'javafx.scene.Node' pour éviter tout crash de conversion
      */
     private void loadSubPage(String fxmlPath) {
         try {
             dynamicContentArea.getChildren().clear();
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            VBox newContent = loader.load();
+
+            // Permet de charger n'allant de VBox à AnchorPane de manière universelle
+            javafx.scene.Node newContent = loader.load();
+
             dynamicContentArea.getChildren().add(newContent);
-            System.out.println("🔄 Sous-page chargée : " + fxmlPath);
+            System.out.println(" Sous-page chargée : " + fxmlPath);
         } catch (IOException e) {
             System.err.println("❌ Impossible de charger la sous-page : " + fxmlPath);
             System.err.println("Détail de l'erreur : " + e.getMessage());
         }
     }
 
-    /**
-     * Gère visuellement l'état "sélectionné" des boutons du menu
-     */
     private void setButtonActive(Button activeButton) {
         Button[] allButtons = {btnHome, btnProfil, btnLogement, btnReservation, btnIncident, btnPaiement};
         for (Button btn : allButtons) {
