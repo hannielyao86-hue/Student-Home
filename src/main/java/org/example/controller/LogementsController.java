@@ -613,11 +613,14 @@ public class LogementsController {
 
         dialog.getDialogPane().setContent(grid);
         dialog.setResultConverter(dialogButton -> {
+            // Remplace ton bloc actuel par celui-ci :
             if (dialogButton == ButtonType.OK) {
                 return new Affectation(
-                        studentCombo.getSelectionModel().getSelectedItem(),
-                        selectedRoom,
-                        datePicker.getValue() != null ? datePicker.getValue().toString() : LocalDate.now().toString()
+                        null, // 1. ID (null car nouvelle affectation)
+                        studentCombo.getSelectionModel().getSelectedItem(), // 2. Student
+                        selectedRoom, // 3. Room
+                        datePicker.getValue() != null ? datePicker.getValue().toString() : LocalDate.now().toString(), // 4. Date Entrée
+                        LocalDate.now().plusMonths(1).toString() // 5. Date Sortie (ajoute une valeur par défaut ici)
                 );
             }
             return null;

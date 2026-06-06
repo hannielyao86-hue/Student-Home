@@ -71,6 +71,7 @@ public class StudentDashboardController {
     public void showReservation() {
         setButtonActive(btnReservation);
         welcomeLabel.setText("Réserver une chambre disponible");
+        // Vérifie bien ce chemin :
         loadSubPage("/view/student_reservation.fxml");
     }
 
@@ -112,16 +113,20 @@ public class StudentDashboardController {
     private void loadSubPage(String fxmlPath) {
         try {
             dynamicContentArea.getChildren().clear();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            java.net.URL url = getClass().getResource(fxmlPath);
 
-            // Permet de charger n'allant de VBox à AnchorPane de manière universelle
-            javafx.scene.Node newContent = loader.load();
+            if (url == null) {
+                System.err.println("❌ ERREUR FATALE : Le fichier est introuvable à l'adresse : " + fxmlPath);
+                return;
+            }
 
-            dynamicContentArea.getChildren().add(newContent);
-            System.out.println(" Sous-page chargée : " + fxmlPath);
+            FXMLLoader loader = new FXMLLoader(url);
+            dynamicContentArea.getChildren().add(loader.load());
+            System.out.println("✅ Page chargée : " + fxmlPath);
+
         } catch (IOException e) {
-            System.err.println("❌ Impossible de charger la sous-page : " + fxmlPath);
-            System.err.println("Détail de l'erreur : " + e.getMessage());
+            System.err.println("❌ Erreur lors du chargement : " + e.getMessage());
+            e.printStackTrace(); // Affiche la ligne exacte de l'erreur
         }
     }
 

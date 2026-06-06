@@ -5,24 +5,20 @@ public class Student {
     // ================= ATTRIBUTS =================
 
     private int idStudent;
-
     private String nom;
-
     private String prenom;
-
     private String email;
-
     private String ecole;
-
     private String telephone;
-
     private String dateEntree;
-
     private String dateSortie;
-
     private int idUsers;
 
-    // ================= CONSTRUCTEUR =================
+    // ================= CONSTRUCTEURS =================
+
+    // Ajouté : Constructeur vide pour permettre l'instanciation sans arguments
+    public Student() {
+    }
 
     public Student(int idStudent,
                    String nom,
@@ -47,79 +43,27 @@ public class Student {
 
     // ================= GETTERS =================
 
-    public int getIdStudent() {
-        return idStudent;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getEcole() {
-        return ecole;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public String getDateEntree() {
-        return dateEntree;
-    }
-
-    public String getDateSortie() {
-        return dateSortie;
-    }
-
-    public int getIdUsers() {
-        return idUsers;
-    }
+    public int getIdStudent() { return idStudent; }
+    public String getNom() { return nom; }
+    public String getPrenom() { return prenom; }
+    public String getEmail() { return email; }
+    public String getEcole() { return ecole; }
+    public String getTelephone() { return telephone; }
+    public String getDateEntree() { return dateEntree; }
+    public String getDateSortie() { return dateSortie; }
+    public int getIdUsers() { return idUsers; }
 
     // ================= SETTERS =================
 
-    public void setIdStudent(int idStudent) {
-        this.idStudent = idStudent;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setEcole(String ecole) {
-        this.ecole = ecole;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
-    }
-
-    public void setDateEntree(String dateEntree) {
-        this.dateEntree = dateEntree;
-    }
-
-    public void setDateSortie(String dateSortie) {
-        this.dateSortie = dateSortie;
-    }
-
-    public void setIdUsers(int idUsers) {
-        this.idUsers = idUsers;
-    }
+    public void setIdStudent(int idStudent) { this.idStudent = idStudent; }
+    public void setNom(String nom) { this.nom = nom; }
+    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public void setEmail(String email) { this.email = email; }
+    public void setEcole(String ecole) { this.ecole = ecole; }
+    public void setTelephone(String telephone) { this.telephone = telephone; }
+    public void setDateEntree(String dateEntree) { this.dateEntree = dateEntree; }
+    public void setDateSortie(String dateSortie) { this.dateSortie = dateSortie; }
+    public void setIdUsers(int idUsers) { this.idUsers = idUsers; }
 
     // ================= toString =================
 

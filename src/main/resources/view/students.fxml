@@ -14,72 +14,31 @@
 
             <Label text="Smart Student"
                    style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-
             <Label text="Residence"
                    style="-fx-text-fill: #27ae60; -fx-font-size: 14px;"/>
-
+            <Separator style="-fx-background-color: #7f8c8d;"/>
+            <Label fx:id="nomUserLabel" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
+            <Label fx:id="roleLabel" style="-fx-text-fill: #27ae60; -fx-font-size: 11px;"/>
             <Separator style="-fx-background-color: #7f8c8d;"/>
 
-            <Label fx:id="nomUserLabel"
-                   style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-
-            <Label fx:id="roleLabel"
-                   style="-fx-text-fill: #27ae60; -fx-font-size: 11px;"/>
-
-            <Separator style="-fx-background-color: #7f8c8d;"/>
-
-            <Button text="🏠  Dashboard"
-                    prefWidth="180"
-                    onAction="#handleDashboard"
-                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-
-            <Button text="👤  Étudiants"
-                    prefWidth="180"
-                    style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
-
-            <Button text="🛏  Logements"
-                    prefWidth="180"
-                    onAction="#handleLogements"
-                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-
-            <Button text="💰  Paiements"
-                    prefWidth="180"
-                    onAction="#handlePaiements"
-                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-
-            <Button text="🔧  Incidents"
-                    prefWidth="180"
-                    onAction="#handleIncidents"
-                    style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="🏠  Dashboard" prefWidth="180" onAction="#handleDashboard" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="👤  Étudiants" prefWidth="180" onAction="#handleEtudiants" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+            <Button text="🛏  Logements" prefWidth="180" onAction="#handleLogements" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="💰  Paiements" prefWidth="180" onAction="#handlePaiements" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button text="🔧  Incidents" prefWidth="180" onAction="#handleIncidents" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
 
             <Region VBox.vgrow="ALWAYS"/>
-
-            <Button text="🚪  Déconnexion"
-                    onAction="#handleLogout"
-                    prefWidth="180"
-                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
-
+            <Button text="🚪  Déconnexion" onAction="#handleLogout" prefWidth="180" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
         </VBox>
-        
     </left>
 
-    <!-- ═════════════════════════════════════════════ -->
-    <!-- CENTER -->
-    <!-- ═════════════════════════════════════════════ -->
-
     <center>
-
         <VBox spacing="20">
-
-            <!-- padding corrigé -->
             <padding>
                 <Insets top="20" right="20" bottom="20" left="20"/>
             </padding>
 
-            <!-- ================= FORMULAIRE ================= -->
-
             <GridPane hgap="15" vgap="15">
-
                 <columnConstraints>
                     <ColumnConstraints percentWidth="15"/>
                     <ColumnConstraints percentWidth="35"/>
@@ -87,92 +46,43 @@
                     <ColumnConstraints percentWidth="35"/>
                 </columnConstraints>
 
-                <!-- ID -->
                 <Label text="ID :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="idField"
-                           editable="false"
-                           promptText="ID automatique"
-                           GridPane.rowIndex="0"
-                           GridPane.columnIndex="1"/>
+                <TextField fx:id="idField" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
 
-                <!-- NOM -->
                 <Label text="Nom :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <TextField fx:id="nomField"
-                           promptText="Nom étudiant"
-                           GridPane.rowIndex="1"
-                           GridPane.columnIndex="1"/>
+                <TextField fx:id="nomField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
 
-                <!-- PRENOM -->
                 <Label text="Prénom :" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                <TextField fx:id="prenomField"
-                           promptText="Prénom étudiant"
-                           GridPane.rowIndex="1"
-                           GridPane.columnIndex="3"/>
+                <TextField fx:id="prenomField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
 
-                <!-- EMAIL -->
                 <Label text="Email :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <TextField fx:id="emailField"
-                           promptText="Email étudiant"
-                           GridPane.rowIndex="2"
-                           GridPane.columnIndex="1"/>
+                <TextField fx:id="emailField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
 
-                <!-- ECOLE -->
                 <Label text="École :" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                <TextField fx:id="ecoleField"
-                           promptText="Nom école"
-                           GridPane.rowIndex="2"
-                           GridPane.columnIndex="3"/>
+                <TextField fx:id="ecoleField" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
 
-                <!-- TELEPHONE -->
                 <Label text="Téléphone :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <TextField fx:id="telephoneField"
-                           promptText="Téléphone"
-                           GridPane.rowIndex="3"
-                           GridPane.columnIndex="1"/>
+                <TextField fx:id="telephoneField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
 
-                <!-- DATE ENTREE -->
                 <Label text="Date entrée :" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                <DatePicker fx:id="dateEntreePicker"
-                            GridPane.rowIndex="3"
-                            GridPane.columnIndex="3"/>
+                <DatePicker fx:id="dateEntreePicker" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
 
-                <!-- DATE SORTIE -->
                 <Label text="Date sortie :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <DatePicker fx:id="dateSortiePicker"
-                            GridPane.rowIndex="4"
-                            GridPane.columnIndex="1"/>
-
+                <DatePicker fx:id="dateSortiePicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
             </GridPane>
 
-            <!-- ================= BOUTONS ================= -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Ajouter" onAction="#handleAddStudent" style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-pref-width:110;" />
+                <Button text="Modifier" onAction="#handleUpdateStudent" style="-fx-background-color:#f39c12; -fx-text-fill:white; -fx-pref-width:110;" />
+                <Button text="Supprimer" onAction="#handleDeleteStudent" style="-fx-background-color:#c0392b; -fx-text-fill:white; -fx-pref-width:110;" />
+                <Button text="Actualiser" onAction="#loadStudents" style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-pref-width:110;" />
 
-            <HBox spacing="15" alignment="CENTER">
-
-                <Button text="Ajouter"
-                        onAction="#handleAddStudent"
-                        style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
-
-                <Button text="Modifier"
-                        onAction="#handleUpdateStudent"
-                        style="-fx-background-color:#f39c12; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
-
-                <Button text="Supprimer"
-                        onAction="#handleDeleteStudent"
-                        style="-fx-background-color:#c0392b; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
-
-                <Button text="Actualiser"
-                        onAction="#loadStudents"
-                        style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:120;" />
-
+                <Button text="Accepter Réservation" onAction="#handleAccepterReservation"
+                        style="-fx-background-color:#059669; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:160;" />
             </HBox>
 
-            <!-- ================= TABLE ================= -->
-
-            <TableView fx:id="studentTable"
-                       prefHeight="500">
-
+            <TableView fx:id="studentTable" prefHeight="500">
                 <columns>
-
                     <TableColumn fx:id="idColumn" text="ID" prefWidth="70"/>
                     <TableColumn fx:id="nomColumn" text="Nom" prefWidth="140"/>
                     <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="140"/>
@@ -181,13 +91,8 @@
                     <TableColumn fx:id="telephoneColumn" text="Téléphone" prefWidth="140"/>
                     <TableColumn fx:id="dateEntreeColumn" text="Date Entrée" prefWidth="120"/>
                     <TableColumn fx:id="dateSortieColumn" text="Date Sortie" prefWidth="120"/>
-
                 </columns>
-
             </TableView>
-
         </VBox>
-
     </center>
-
 </BorderPane>

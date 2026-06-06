@@ -1,448 +1,125 @@
 package org.example.controller;
 
-import java.time.LocalDate;
-
 import org.example.dao.StudentDAO;
+import org.example.dao.AffectationDAO;
 import org.example.model.Student;
-
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.beans.property.*;
 
 public class StudentController {
 
-    // ═══════════════════════════════════════════════════════════════
-    // TABLEVIEW
-    // ═══════════════════════════════════════════════════════════════
-
-    @FXML
-    private TableView<Student> studentTable;
-
-    @FXML
-    private TableColumn<Student, Integer> idColumn;
-
-    @FXML
-    private TableColumn<Student, String> nomColumn;
-
-    @FXML
-    private TableColumn<Student, String> prenomColumn;
-
-    @FXML
-    private TableColumn<Student, String> emailColumn;
-
-    @FXML
-    private TableColumn<Student, String> ecoleColumn;
-
-    @FXML
-    private TableColumn<Student, String> telephoneColumn;
-
-    @FXML
-    private TableColumn<Student, String> dateEntreeColumn;
-
-    @FXML
-    private TableColumn<Student, String> dateSortieColumn;
-
-    // ═══════════════════════════════════════════════════════════════
-    // FORMULAIRE
-    // ═══════════════════════════════════════════════════════════════
-
-    @FXML
-    private TextField idField;
-
-    @FXML
-    private TextField nomField;
-
-    @FXML
-    private TextField prenomField;
-
-    @FXML
-    private TextField emailField;
-
-    @FXML
-    private TextField ecoleField;
-
-    @FXML
-    private TextField telephoneField;
-
-    @FXML
-    private DatePicker dateEntreePicker;
-
-    @FXML
-    private DatePicker dateSortiePicker;
-
-    @FXML
-    private Label nomUserLabel;
-
-    @FXML
-    private Label roleLabel;
-
-    // ═══════════════════════════════════════════════════════════════
-    // DAO
-    // ═══════════════════════════════════════════════════════════════
+    @FXML private TableView<Student> studentTable;
+    @FXML private TableColumn<Student, Integer> idColumn;
+    @FXML private TableColumn<Student, String> nomColumn, prenomColumn, emailColumn, ecoleColumn, telephoneColumn, dateEntreeColumn, dateSortieColumn;
+    @FXML private TextField idField, nomField, prenomField, emailField, ecoleField, telephoneField;
+    @FXML private DatePicker dateEntreePicker, dateSortiePicker;
 
     private final StudentDAO dao = new StudentDAO();
-
-    // ═══════════════════════════════════════════════════════════════
-    // INITIALIZE
-    // ═══════════════════════════════════════════════════════════════
+    private final AffectationDAO affectationDAO = new AffectationDAO();
 
     @FXML
     public void initialize() {
-
-        System.out.println("→ Initialisation StudentController");
-
-        // ================= TABLE COLUMNS =================
-
-        idColumn.setCellValueFactory(data ->
-                new SimpleIntegerProperty(
-                        data.getValue().getIdStudent()
-                ).asObject()
-        );
-
-        nomColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getNom()
-                )
-        );
-
-        prenomColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getPrenom()
-                )
-        );
-
-        emailColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getEmail()
-                )
-        );
-
-        ecoleColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getEcole()
-                )
-        );
-
-        telephoneColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getTelephone()
-                )
-        );
-
-        dateEntreeColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getDateEntree()
-                )
-        );
-
-        dateSortieColumn.setCellValueFactory(data ->
-                new SimpleStringProperty(
-                        data.getValue().getDateSortie()
-                )
-        );
-
-        // ================= LOAD STUDENTS =================
+        idColumn.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getIdStudent()).asObject());
+        nomColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getNom()));
+        prenomColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPrenom()));
+        emailColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEmail()));
+        ecoleColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEcole()));
+        telephoneColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTelephone()));
+        dateEntreeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateEntree()));
+        dateSortieColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateSortie()));
 
         loadStudents();
-
-        // ================= TABLE SELECTION =================
-
-        studentTable.getSelectionModel()
-                .selectedItemProperty()
-                .addListener((obs, oldValue, newValue) -> {
-
-                    if (newValue != null) {
-
-                        idField.setText(
-                                String.valueOf(newValue.getIdStudent())
-                        );
-
-                        nomField.setText(
-                                newValue.getNom()
-                        );
-
-                        prenomField.setText(
-                                newValue.getPrenom()
-                        );
-
-                        emailField.setText(
-                                newValue.getEmail()
-                        );
-
-                        ecoleField.setText(
-                                newValue.getEcole()
-                        );
-
-                        telephoneField.setText(
-                                newValue.getTelephone()
-                        );
-
-                        // DATE ENTREE
-
-                        if (newValue.getDateEntree() != null &&
-                                !newValue.getDateEntree().isEmpty()) {
-
-                            dateEntreePicker.setValue(
-                                    LocalDate.parse(
-                                            newValue.getDateEntree()
-                                    )
-                            );
-
-                        } else {
-
-                            dateEntreePicker.setValue(null);
-                        }
-
-                        // DATE SORTIE
-
-                        if (newValue.getDateSortie() != null &&
-                                !newValue.getDateSortie().isEmpty()) {
-
-                            dateSortiePicker.setValue(
-                                    LocalDate.parse(
-                                            newValue.getDateSortie()
-                                    )
-                            );
-
-                        } else {
-
-                            dateSortiePicker.setValue(null);
-                        }
-                    }
-                });
-
-        System.out.println("✅ StudentController chargé");
     }
-
-    // ═══════════════════════════════════════════════════════════════
-    // LOAD STUDENTS
-    // ═══════════════════════════════════════════════════════════════
 
     @FXML
     public void loadStudents() {
-
-        studentTable.getItems().setAll(
-                dao.getAllStudents()
-        );
+        studentTable.getItems().setAll(dao.getAllStudents());
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // ADD STUDENT
-    // ═══════════════════════════════════════════════════════════════
+    // ========================================================
+    // GESTION DES ÉTUDIANTS (CRUD)
+    // ========================================================
 
     @FXML
     public void handleAddStudent() {
-
         try {
-
-            Student student = new Student(
-                    0,
-                    nomField.getText(),
-                    prenomField.getText(),
-                    emailField.getText(),
-                    ecoleField.getText(),
+            Student student = new Student(0, nomField.getText(), prenomField.getText(),
+                    emailField.getText(), ecoleField.getText(),
                     telephoneField.getText(),
-
-                    dateEntreePicker.getValue() != null
-                            ? dateEntreePicker.getValue().toString()
-                            : null,
-
-                    dateSortiePicker.getValue() != null
-                            ? dateSortiePicker.getValue().toString()
-                            : null,
-
-                    1
-            );
-
+                    dateEntreePicker.getValue() != null ? dateEntreePicker.getValue().toString() : null,
+                    dateSortiePicker.getValue() != null ? dateSortiePicker.getValue().toString() : null, 1);
             dao.createStudent(student);
-
             loadStudents();
-
             clearFields();
-
-            System.out.println("✅ Étudiant ajouté");
-
-        } catch (Exception e) {
-
-            System.out.println("❌ Erreur ajout étudiant : " + e.getMessage());
-
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
-
-    // ═══════════════════════════════════════════════════════════════
-    // UPDATE STUDENT
-    // ═══════════════════════════════════════════════════════════════
 
     @FXML
     public void handleUpdateStudent() {
-
         try {
-
-            Student student = new Student(
-                    Integer.parseInt(idField.getText()),
-
-                    nomField.getText(),
-                    prenomField.getText(),
-                    emailField.getText(),
-                    ecoleField.getText(),
-                    telephoneField.getText(),
-
-                    dateEntreePicker.getValue() != null
-                            ? dateEntreePicker.getValue().toString()
-                            : null,
-
-                    dateSortiePicker.getValue() != null
-                            ? dateSortiePicker.getValue().toString()
-                            : null,
-
-                    1
-            );
-
+            Student student = new Student(Integer.parseInt(idField.getText()), nomField.getText(), prenomField.getText(),
+                    emailField.getText(), ecoleField.getText(), telephoneField.getText(),
+                    dateEntreePicker.getValue().toString(), dateSortiePicker.getValue().toString(), 1);
             dao.updateStudent(student);
-
             loadStudents();
-
             clearFields();
-
-            System.out.println("✅ Étudiant modifié");
-
-        } catch (Exception e) {
-
-            System.out.println("❌ Erreur modification : " + e.getMessage());
-
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
-
-    // ═══════════════════════════════════════════════════════════════
-    // DELETE STUDENT
-    // ═══════════════════════════════════════════════════════════════
 
     @FXML
     public void handleDeleteStudent() {
-
         try {
-
-            int id = Integer.parseInt(
-                    idField.getText()
-            );
-
-            dao.deleteStudent(id);
-
+            dao.deleteStudent(Integer.parseInt(idField.getText()));
             loadStudents();
-
             clearFields();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
 
-            System.out.println("✅ Étudiant supprimé");
+    private void clearFields() {
+        idField.clear(); nomField.clear(); prenomField.clear(); emailField.clear();
+        ecoleField.clear(); telephoneField.clear();
+        dateEntreePicker.setValue(null); dateSortiePicker.setValue(null);
+    }
 
-        } catch (Exception e) {
+    // ========================================================
+    // GESTION RÉSERVATIONS
+    // ========================================================
 
-            System.out.println("❌ Erreur suppression : " + e.getMessage());
+    @FXML
+    public void handleAccepterReservation() {
+        Student selected = studentTable.getSelectionModel().getSelectedItem();
+        if (selected == null) return;
 
-            e.printStackTrace();
+        int affId = affectationDAO.getAffectationIdByStudent(selected.getIdStudent());
+        int roomId = affectationDAO.getRoomIdByStudent(selected.getIdStudent());
+
+        if (affId != -1) {
+            affectationDAO.accepterReservation(affId, roomId);
+            loadStudents();
         }
     }
 
-    // ═══════════════════════════════════════════════════════════════
-    // CLEAR FIELDS
-    // ═══════════════════════════════════════════════════════════════
+    // ========================================================
+    // NAVIGATION
+    // ========================================================
 
-    private void clearFields() {
-
-        idField.clear();
-
-        nomField.clear();
-
-        prenomField.clear();
-
-        emailField.clear();
-
-        ecoleField.clear();
-
-        telephoneField.clear();
-
-        dateEntreePicker.setValue(null);
-
-        dateSortiePicker.setValue(null);
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // DASHBOARD
-    // ═══════════════════════════════════════════════════════════════
-
-    @FXML
-    public void handleDashboard() {
-        loadPage("/view/dashboard.fxml");
-    }
-
-    @FXML
-    public void handleLogements() {
-        loadPage("/view/logements.fxml");
-    }
-
-    @FXML
-    public void handlePaiements() {
-        loadPage("/view/paiements.fxml");
-    }
-
-    @FXML
-    public void handleIncidents() {
-        loadPage("/view/Incident.fxml");
-    }
+    @FXML public void handleDashboard() { loadPage("/view/dashboard.fxml"); }
+    @FXML public void handleEtudiants() { System.out.println("Déjà sur la page"); }
+    @FXML public void handleLogements() { loadPage("/view/logements.fxml"); }
+    @FXML public void handlePaiements() { loadPage("/view/paiements.fxml"); }
+    @FXML public void handleIncidents() { loadPage("/view/Incident.fxml"); }
+    @FXML public void handleLogout() { loadPage("/view/login.fxml"); }
 
     private void loadPage(String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource(fxmlPath)
-            );
-            Stage stage = (Stage)
-                    studentTable.getScene().getWindow();
-            stage.setScene(
-                    new Scene(loader.load())
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Stage stage = (Stage) studentTable.getScene().getWindow();
+            stage.setScene(new Scene(loader.load()));
             stage.setMaximized(true);
-        } catch (Exception e) {
-            System.out.println("❌ Erreur chargement page : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    // LOGOUT
-    // ═══════════════════════════════════════════════════════════════
-
-    @FXML
-    public void handleLogout() {
-
-        try {
-
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/login.fxml")
-            );
-
-            Stage stage = (Stage)
-                    studentTable.getScene().getWindow();
-
-            stage.setScene(
-                    new Scene(loader.load())
-            );
-
-            stage.setMaximized(true);
-
-        } catch (Exception e) {
-
-            System.out.println("❌ Erreur logout : " + e.getMessage());
-
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 }

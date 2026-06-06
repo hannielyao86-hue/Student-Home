@@ -1,55 +1,56 @@
-
 package org.example.model;
 
 public class Affectation {
 
+    // ================= ATTRIBUTS =================
+
+    private Integer id;
     private Student student;
     private Room room;
-    private String affectationDate;
+    private String dateEntree;
+    private String dateSortie;
 
-    public Affectation(Student student,
-                       Room room,
-                       String affectationDate) {
+    // ================= CONSTRUCTEURS =================
 
+    // Constructeur complet (celui utilisé par ton contrôleur)
+    public Affectation(Integer id, Student student, Room room, String dateEntree, String dateSortie) {
+        this.id = id;
         this.student = student;
         this.room = room;
-        this.affectationDate = affectationDate;
+        this.dateEntree = dateEntree;
+        this.dateSortie = dateSortie;
     }
 
-    // ===== GETTERS =====
-
-    public Student getStudent() {
-        return student;
+    // Constructeur vide (utile pour les frameworks)
+    public Affectation() {
     }
 
-    public Room getRoom() {
-        return room;
-    }
+    // ================= GETTERS =================
 
-    public String getAffectationDate() {
-        return affectationDate;
-    }
+    public Integer getId() { return id; }
+    public Student getStudent() { return student; }
+    public Room getRoom() { return room; }
+    public String getDateEntree() { return dateEntree; }
+    public String getDateSortie() { return dateSortie; }
 
-    // ===== SETTERS =====
+    // ================= SETTERS =================
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+    public void setId(Integer id) { this.id = id; }
+    public void setStudent(Student student) { this.student = student; }
+    public void setRoom(Room room) { this.room = room; }
+    public void setDateEntree(String dateEntree) { this.dateEntree = dateEntree; }
+    public void setDateSortie(String dateSortie) { this.dateSortie = dateSortie; }
 
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
-    public void setAffectationDate(String affectationDate) {
-        this.affectationDate = affectationDate;
-    }
+    // ================= toString =================
 
     @Override
     public String toString() {
         return "Affectation{" +
-                "student=" + student +
-                ", room=" + room +
-                ", affectationDate='" + affectationDate + '\'' +
+                "id=" + id +
+                ", student=" + (student != null ? student.getIdStudent() : "null") +
+                ", room=" + (room != null ? room.getNumeroRoom() : "null") +
+                ", dateEntree='" + dateEntree + '\'' +
+                ", dateSortie='" + dateSortie + '\'' +
                 '}';
     }
 }

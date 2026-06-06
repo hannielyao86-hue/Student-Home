@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="20" style="-fx-background-color: #ffffff; -fx-padding: 30; -fx-background-radius: 15; -fx-border-color: #e0e0e0; -fx-border-radius: 15;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.PaiementEtudiantController">
+
+    <Label text="💰 Effectuer un Paiement" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2d3436;"/>
+
+    <GridPane hgap="15" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" />
+        </columnConstraints>
+
+        <Label text="Nom :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="nomField" promptText="Nom de l'étudiant" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Prénom :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextField fx:id="prenomField" promptText="Prénom de l'étudiant" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <Label text="Montant (€) :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <TextField fx:id="montantField" promptText="0.00" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <Label text="Date :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <DatePicker fx:id="datePicker" maxWidth="Infinity" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <Button text="Valider le Paiement" onAction="#handlePaiement" maxWidth="Infinity" style="-fx-background-color: #0984e3; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 10;"/>
+
+    <Label fx:id="statusLabel" text="" style="-fx-font-weight: bold;"/>
+</VBox>
