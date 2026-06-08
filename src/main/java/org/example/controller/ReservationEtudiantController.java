@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -11,7 +12,6 @@ import org.example.model.Affectation;
 import org.example.model.Room;
 import org.example.model.Student;
 import org.example.service.AuthService;
-
 import java.time.LocalDate;
 
 public class ReservationEtudiantController {
@@ -22,34 +22,39 @@ public class ReservationEtudiantController {
     @FXML private TableColumn<Room, Double> colLoyer;
     @FXML private Label infoCapacite, infoLoyer, infoStatut;
 
+    private final AffectationDAO affectationDAO = new AffectationDAO();
+    private final RoomDAO roomDAO = new RoomDAO();
+
     @FXML
     public void initialize() {
+        // 1. Lier les colonnes aux propriétés du modèle Room
         colChambre.setCellValueFactory(new PropertyValueFactory<>("numeroRoom"));
         colType.setCellValueFactory(new PropertyValueFactory<>("typeRoom"));
-        colCapacite.setCellValueFactory(new PropertyValueFactory<>("capaciterRoom"));
+        colCapacite.setCellValueFactory(new PropertyValueFactory<>("capacite"));
         colLoyer.setCellValueFactory(new PropertyValueFactory<>("loyer"));
         colStatut.setCellValueFactory(new PropertyValueFactory<>("statutRoom"));
 
-        int studentId = AuthService.getCurrentUser().getIdUsers();
+        // 2. Ajouter un écouteur pour la Fiche d'Information
+        tableChambres.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                infoCapacite.setText("Capacité : " + newVal.getCapaciterRoom() + " pers.");
+                infoLoyer.setText("Loyer : " + newVal.getLoyer() + " €/mois");
+                infoStatut.setText("Statut : " + newVal.getStatutRoom());
+            }
+        });
 
-        if (new AffectationDAO().hasActiveReservation(studentId)) {
-            tableChambres.setPlaceholder(new Label("Vous avez déjà une réservation en cours."));
-            tableChambres.setDisable(true);
+        int studentId = AuthService.getCurrentUser().getIdUsers();
+        if (affectationDAO.hasActiveReservation(studentId)) {
+            tableChambres.setVisible(false);
         } else {
             loadAvailableRooms();
         }
-
-        tableChambres.getSelectionModel().selectedItemProperty().addListener((obs, old, n) -> {
-            if (n != null) {
-                infoCapacite.setText("Capacité : " + n.getCapaciterRoom());
-                infoLoyer.setText("Loyer : " + n.getLoyer() + " €/mois");
-                infoStatut.setText("Statut : " + n.getStatutRoom());
-            }
-        });
     }
 
     private void loadAvailableRooms() {
-        tableChambres.getItems().setAll(new RoomDAO().getAvailableRooms());
+        List<Room> rooms = roomDAO.getAvailableRooms();
+        System.out.println("Chambres trouvées : " + rooms.size());
+        tableChambres.getItems().setAll(rooms);
     }
 
     @FXML
@@ -60,7 +65,6 @@ public class ReservationEtudiantController {
             return;
         }
 
-        // Fenêtre de saisie des dates
         Dialog<Void> dialog = new Dialog<>();
         dialog.setTitle("Dates de séjour");
         dialog.setHeaderText("Chambre : " + selected.getNumeroRoom());
@@ -77,11 +81,7 @@ public class ReservationEtudiantController {
 
         dialog.setResultConverter(button -> {
             if (button == ButtonType.OK) {
-                if (dateEntree.getValue().isAfter(dateSortie.getValue())) {
-                    showAlert(Alert.AlertType.ERROR, "Erreur", "La date de sortie doit être après l'entrée.");
-                } else {
-                    processReservation(selected, dateEntree.getValue().toString(), dateSortie.getValue().toString());
-                }
+                processReservation(selected, dateEntree.getValue().toString(), dateSortie.getValue().toString());
             }
             return null;
         });
@@ -90,14 +90,12 @@ public class ReservationEtudiantController {
 
     private void processReservation(Room room, String debut, String fin) {
         int studentId = AuthService.getCurrentUser().getIdUsers();
-
         Student student = new Student();
         student.setIdStudent(studentId);
 
-        // MODIFIE CETTE LIGNE : Ajoute 'null' au début
         Affectation aff = new Affectation(null, student, room, debut, fin);
+        affectationDAO.createAffectation(aff);
 
-        new AffectationDAO().createAffectation(aff);
         showAlert(Alert.AlertType.INFORMATION, "Succès", "Votre demande a été envoyée !");
         loadAvailableRooms();
     }

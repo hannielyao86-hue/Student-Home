@@ -2,7 +2,6 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
 <VBox prefHeight="600.0" prefWidth="950.0" spacing="20.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.ReservationEtudiantController">
 
@@ -33,7 +32,7 @@
             <Region VBox.vgrow="ALWAYS" />
 
             <Button text="Réserver" onAction="#handleReservation" maxWidth="Infinity"
-                    style="-fx-background-color: #1e293b; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12; -fx-cursor: hand; -fx-background-radius: 8;"/>
+                    style="-fx-background-color: #1e293b; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12; -fx-background-radius: 8;"/>
         </VBox>
     </HBox>
 </VBox>

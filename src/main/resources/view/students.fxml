@@ -9,88 +9,36 @@
             fx:controller="org.example.controller.StudentController">
 
     <left>
-        <VBox spacing="10"
-              style="-fx-background-color: #2c3e50; -fx-padding: 20;">
-
-            <Label text="Smart Student"
-                   style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Label text="Residence"
-                   style="-fx-text-fill: #27ae60; -fx-font-size: 14px;"/>
-            <Separator style="-fx-background-color: #7f8c8d;"/>
-            <Label fx:id="nomUserLabel" style="-fx-text-fill: white; -fx-font-size: 13px;"/>
-            <Label fx:id="roleLabel" style="-fx-text-fill: #27ae60; -fx-font-size: 11px;"/>
-            <Separator style="-fx-background-color: #7f8c8d;"/>
-
+        <VBox spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 20;">
+            <Label text="Smart Student" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
             <Button text="🏠  Dashboard" prefWidth="180" onAction="#handleDashboard" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-            <Button text="👤  Étudiants" prefWidth="180" onAction="#handleEtudiants" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+            <Button text="👤  Étudiants/Réservations" prefWidth="180" onAction="#handleEtudiants" style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
             <Button text="🛏  Logements" prefWidth="180" onAction="#handleLogements" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-            <Button text="💰  Paiements" prefWidth="180" onAction="#handlePaiements" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-            <Button text="🔧  Incidents" prefWidth="180" onAction="#handleIncidents" style="-fx-background-color: transparent; -fx-text-fill: white;"/>
-
             <Region VBox.vgrow="ALWAYS"/>
             <Button text="🚪  Déconnexion" onAction="#handleLogout" prefWidth="180" style="-fx-background-color: #e74c3c; -fx-text-fill: white;"/>
         </VBox>
     </left>
 
     <center>
-        <VBox spacing="20">
-            <padding>
-                <Insets top="20" right="20" bottom="20" left="20"/>
-            </padding>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <Label text="Gestion des demandes de réservation" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-            <GridPane hgap="15" vgap="15">
-                <columnConstraints>
-                    <ColumnConstraints percentWidth="15"/>
-                    <ColumnConstraints percentWidth="35"/>
-                    <ColumnConstraints percentWidth="15"/>
-                    <ColumnConstraints percentWidth="35"/>
-                </columnConstraints>
-
-                <Label text="ID :" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-                <TextField fx:id="idField" editable="false" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
-
-                <Label text="Nom :" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-                <TextField fx:id="nomField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
-
-                <Label text="Prénom :" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
-                <TextField fx:id="prenomField" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
-
-                <Label text="Email :" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-                <TextField fx:id="emailField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
-
-                <Label text="École :" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
-                <TextField fx:id="ecoleField" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
-
-                <Label text="Téléphone :" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
-                <TextField fx:id="telephoneField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
-
-                <Label text="Date entrée :" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
-                <DatePicker fx:id="dateEntreePicker" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
-
-                <Label text="Date sortie :" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
-                <DatePicker fx:id="dateSortiePicker" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
-            </GridPane>
-
-            <HBox spacing="10" alignment="CENTER">
-                <Button text="Ajouter" onAction="#handleAddStudent" style="-fx-background-color:#27ae60; -fx-text-fill:white; -fx-pref-width:110;" />
-                <Button text="Modifier" onAction="#handleUpdateStudent" style="-fx-background-color:#f39c12; -fx-text-fill:white; -fx-pref-width:110;" />
-                <Button text="Supprimer" onAction="#handleDeleteStudent" style="-fx-background-color:#c0392b; -fx-text-fill:white; -fx-pref-width:110;" />
-                <Button text="Actualiser" onAction="#loadStudents" style="-fx-background-color:#2980b9; -fx-text-fill:white; -fx-pref-width:110;" />
-
-                <Button text="Accepter Réservation" onAction="#handleAccepterReservation"
-                        style="-fx-background-color:#059669; -fx-text-fill:white; -fx-font-weight:bold; -fx-pref-width:160;" />
+            <HBox spacing="10">
+                <Button text="Accepter la sélection" onAction="#handleAccepterReservation"
+                        style="-fx-background-color: #059669; -fx-text-fill: white; -fx-font-weight: bold; -fx-pref-width: 180;" />
+                <Button text="Actualiser la liste" onAction="#loadDemandesEnAttente"
+                        style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-pref-width: 150;" />
+                <Button text="Refuser la sélection" onAction="#handleRefuserReservation"
+                        style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-pref-width: 180;" />
             </HBox>
 
-            <TableView fx:id="studentTable" prefHeight="500">
+            <TableView fx:id="reservationTable" prefHeight="500">
                 <columns>
-                    <TableColumn fx:id="idColumn" text="ID" prefWidth="70"/>
-                    <TableColumn fx:id="nomColumn" text="Nom" prefWidth="140"/>
-                    <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="140"/>
-                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="220"/>
-                    <TableColumn fx:id="ecoleColumn" text="École" prefWidth="150"/>
-                    <TableColumn fx:id="telephoneColumn" text="Téléphone" prefWidth="140"/>
-                    <TableColumn fx:id="dateEntreeColumn" text="Date Entrée" prefWidth="120"/>
-                    <TableColumn fx:id="dateSortieColumn" text="Date Sortie" prefWidth="120"/>
+                    <TableColumn fx:id="nomColumn" text="Nom" prefWidth="150"/>
+                    <TableColumn fx:id="prenomColumn" text="Prénom" prefWidth="150"/>
+                    <TableColumn fx:id="chambreColumn" text="Chambre" prefWidth="120"/>
+                    <TableColumn fx:id="dateEntreeColumn" text="Date Entrée" prefWidth="150"/>
+                    <TableColumn fx:id="dateSortieColumn" text="Date Sortie" prefWidth="150"/>
                 </columns>
             </TableView>
         </VBox>

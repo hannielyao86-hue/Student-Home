@@ -1,17 +1,18 @@
 package org.example.dao;
 
 import org.example.model.Room;
+import org.example.config.DatabaseConnection; // Import important
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RoomDAO {
 
-    // Pour l'admin : voit tout
+    // 1. Voir toutes les chambres (Admin)
     public List<Room> getAllRooms() {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM rooms";
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_home", "root", "");
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
@@ -21,11 +22,13 @@ public class RoomDAO {
         return rooms;
     }
 
-    // Pour l'étudiant : voit uniquement les libres
+    // 2. Voir uniquement les chambres vraiment LIBRES (Étudiants)
     public List<Room> getAvailableRooms() {
         List<Room> rooms = new ArrayList<>();
+        // Désormais, seules les 'LIBRE' apparaissent.
+        // Les 'RESERVEE' et 'OCCUPEE' sont automatiquement masquées.
         String sql = "SELECT * FROM rooms WHERE statut_room = 'LIBRE'";
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_home", "root", "");
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -37,7 +40,7 @@ public class RoomDAO {
 
     public boolean createRoom(Room room) {
         String sql = "INSERT INTO rooms (numero_room, type_room, capaciter_room, statut_room, loyer, id_residence, id_incident) VALUES (?, ?, ?, ?, ?, 1, 'NONE')";
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_home", "root", "");
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, room.getNumeroRoom());
             stmt.setString(2, room.getTypeRoom());
@@ -50,7 +53,7 @@ public class RoomDAO {
 
     public boolean updateRoom(Room room) {
         String sql = "UPDATE rooms SET numero_room = ?, type_room = ?, capaciter_room = ?, statut_room = ?, loyer = ? WHERE id_room = ?";
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/student_home", "root", "");
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, room.getNumeroRoom());
             stmt.setString(2, room.getTypeRoom());
