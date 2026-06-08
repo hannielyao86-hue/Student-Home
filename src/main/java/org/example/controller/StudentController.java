@@ -18,37 +18,35 @@ public class StudentController {
     @FXML private TableView<Affectation> reservationTable;
     @FXML private TableColumn<Affectation, String> nomColumn, prenomColumn, chambreColumn, dateEntreeColumn, dateSortieColumn;
 
-    // Instance unique nommée "dao" utilisée partout
     private AffectationDAO dao = new AffectationDAO();
 
     @FXML
     public void initialize() {
-        // Mapping des colonnes
         nomColumn.setCellValueFactory(data -> new SimpleStringProperty(
-                data.getValue().getStudent() != null ? data.getValue().getStudent().getNom() : ""));
+                data.getValue().getStudent() != null ? data.getValue().getStudent().getNom() : "N/A"));
 
         prenomColumn.setCellValueFactory(data -> new SimpleStringProperty(
-                data.getValue().getStudent() != null ? data.getValue().getStudent().getPrenom() : ""));
+                data.getValue().getStudent() != null ? data.getValue().getStudent().getPrenom() : "N/A"));
 
         chambreColumn.setCellValueFactory(data -> new SimpleStringProperty(
-                data.getValue().getRoom() != null ? data.getValue().getRoom().getNumeroRoom() : ""));
+                data.getValue().getRoom() != null ? data.getValue().getRoom().getNumeroRoom() : "N/A"));
 
         dateEntreeColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateEntree()));
 
-        dateSortieColumn.setCellValueFactory(data -> new SimpleStringProperty(
-                data.getValue().getDateSortie() != null ? data.getValue().getDateSortie() : ""));
+        dateSortieColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getDateSortie()));
 
-        // Charger les données dès l'initialisation
         loadDemandesEnAttente();
     }
 
+    // UNE SEULE FOIS : Cette méthode contient tout le nécessaire
     @FXML
     public void loadDemandesEnAttente() {
-        // Utilisation de "dao"
         List<Affectation> list = dao.getAllAffectationsByStatus("EN_ATTENTE");
 
-        if (list.isEmpty()) {
-            System.out.println("DEBUG : Aucune donnée EN_ATTENTE trouvée dans la base.");
+        // Log de debug pour voir si Java récupère bien les données
+        for (Affectation aff : list) {
+            String nom = (aff.getStudent() != null) ? aff.getStudent().getNom() : "NULL";
+            System.out.println("DEBUG : Affectation ID " + aff.getId() + " - Étudiant: " + nom);
         }
 
         reservationTable.getItems().setAll(list);
@@ -58,43 +56,29 @@ public class StudentController {
     public void handleAccepterReservation() {
         Affectation selected = reservationTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert("Attention", "Veuillez sélectionner une demande dans le tableau.");
+            showAlert("Attention", "Veuillez sélectionner une demande.");
             return;
         }
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Valider cette réservation ?", ButtonType.YES, ButtonType.NO);
-        confirm.showAndWait();
-
-        if (confirm.getResult() == ButtonType.YES) {
-            // Utilisation de "dao"
-            dao.accepterReservation(selected.getId(), selected.getRoom().getIdRoom());
-            loadDemandesEnAttente();
-            showAlert("Succès", "La réservation a été acceptée.");
-        }
+        dao.accepterReservation(selected.getId(), selected.getRoom().getIdRoom());
+        loadDemandesEnAttente();
+        showAlert("Succès", "Réservation acceptée.");
     }
 
     @FXML
     public void handleRefuserReservation() {
         Affectation selected = reservationTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert("Attention", "Veuillez sélectionner une demande à refuser.");
+            showAlert("Attention", "Veuillez sélectionner une demande.");
             return;
         }
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "Êtes-vous sûr de vouloir refuser cette réservation ?", ButtonType.YES, ButtonType.NO);
-        confirm.showAndWait();
-
-        if (confirm.getResult() == ButtonType.YES) {
-            // Utilisation de "dao"
-            dao.refuserReservation(selected.getId(), selected.getRoom().getIdRoom());
-            loadDemandesEnAttente();
-            showAlert("Information", "La réservation a été refusée.");
-        }
+        dao.refuserReservation(selected.getId(), selected.getRoom().getIdRoom());
+        loadDemandesEnAttente();
+        showAlert("Information", "Réservation refusée.");
     }
 
-    // --- Navigation ---
+    // --- Navigation (Inchangé) ---
     @FXML public void handleDashboard(ActionEvent event) { changeScene(event, "/view/dashboard.fxml"); }
-    @FXML public void handleEtudiants(ActionEvent event) { /* Déjà sur cette vue */ }
+    @FXML public void handleEtudiants(ActionEvent event) { }
     @FXML public void handleLogements(ActionEvent event) { changeScene(event, "/view/logements.fxml"); }
     @FXML public void handleLogout(ActionEvent event) { changeScene(event, "/view/login.fxml"); }
 
@@ -103,10 +87,7 @@ public class StudentController {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlPath));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.getScene().setRoot(root);
-        } catch (IOException | NullPointerException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger la page : " + fxmlPath);
-        }
+        } catch (IOException e) { e.printStackTrace(); }
     }
 
     private void showAlert(String title, String content) {

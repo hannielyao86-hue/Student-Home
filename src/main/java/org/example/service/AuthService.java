@@ -1,90 +1,59 @@
 package org.example.service;
 
-import org.example.dao.UserDAO;
+import org.example.config.DatabaseConnection;
 import org.example.model.User;
-import org.example.utils.PasswordUtil;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-/**
- * Service d'authentification
- *
- * Responsable de la logique de connexion :
- * - vérification email
- * - vérification mot de passe (BCrypt)
- * - vérification statut compte
- */
 public class AuthService {
 
-    private UserDAO userDAO;
-
-    /**
-     * Utilisateur connecté (SESSION simple)
-     */
     private static User currentUser;
 
-    public AuthService() {
-        this.userDAO = new UserDAO();
-    }
-
-    /**
-     *  LOGIN UTILISATEUR
-     *
-     * @param email email saisi
-     * @param password mot de passe saisi
-     * @return true si connexion OK
-     */
+    // Méthode de connexion
     public boolean login(String email, String password) {
-
-        // 1. Vérifier si l'utilisateur existe
-        User user = userDAO.findByEmail(email);
-
-        if (user == null) {
-            System.out.println("❌ Email introuvable");
-            return false;
-        }
-
-        // 2. Vérifier statut du compte
-        if (!"ACTIF".equalsIgnoreCase(user.getStatut())) {
-            System.out.println("❌ Compte désactivé");
-            return false;
-        }
-
-        // 3. Vérifier mot de passe avec BCrypt si le hash le supporte,
-        //    sinon accepter le mot de passe en clair pour les comptes plus anciens.
-        boolean passwordValid = false;
-        String storedHash = user.getMotPasseHash();
-
-        if (storedHash != null && (storedHash.startsWith("$2a$") || storedHash.startsWith("$2b$") || storedHash.startsWith("$2y$"))) {
-            passwordValid = PasswordUtil.checkPassword(password, storedHash);
-        } else {
-            passwordValid = storedHash != null && storedHash.equals(password);
-        }
-
-        if (!passwordValid) {
-            System.out.println("❌ Mot de passe incorrect");
-            return false;
-        }
-
-        // 4. Connexion réussie → session utilisateur
-        currentUser = user;
-
-        System.out.println("✅ Connexion réussie : " +
-                user.getPrenomUser() + " " + user.getNomUsers());
-
-        return true;
+        String query = "SELECT * FROM users WHERE email_user = ? AND mot_passe_hash = ?";
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, email);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                currentUser = new User(
+                        rs.getInt("id_users"),
+                        rs.getString("nom_users"),
+                        rs.getString("prenom_user"),
+                        rs.getString("email_user"),
+                        rs.getString("mot_passe_hash"),
+                        rs.getString("statut"),
+                        null, // ou rs.getTimestamp("date_creation").toLocalDateTime()
+                        rs.getInt("id_roles")
+                );
+                return true;
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
     }
 
-    /**
-     *  Récupérer utilisateur connecté
-     */
+    // Méthode pour récupérer le nom du rôle
+    public String getRoleName(User user) {
+        if (user == null) return null;
+        String query = "SELECT nom FROM roles WHERE id_roles = ?";
+        try (Connection conn = DatabaseConnection.getInstance().getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, user.getRoleId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) return rs.getString("nom");
+        } catch (Exception e) { e.printStackTrace(); }
+        return null;
+    }
+
     public static User getCurrentUser() {
         return currentUser;
     }
 
-    /**
-     *  Déconnexion
-     */
     public void logout() {
-        currentUser = null;
-        System.out.println("🚪 Déconnexion réussie");
+        currentUser = null; // Réinitialise l'utilisateur dans le service
+        org.example.utils.Session.clear(); // Vide également votre classe Session globale
     }
 }

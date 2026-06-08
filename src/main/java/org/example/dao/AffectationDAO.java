@@ -12,7 +12,6 @@ public class AffectationDAO {
 
     // 1. Créer une nouvelle demande
     public void createAffectation(Affectation affectation) {
-        // CORRIGÉ : Utilisation de id_student
         String insertSql = "INSERT INTO affectations (id_student, room_id, date_entree, date_sortie, status) VALUES (?, ?, ?, ?, 'EN_ATTENTE')";
         String updateRoom = "UPDATE rooms SET statut_room = 'RESERVEE' WHERE id_room = ?";
         try (Connection conn = DatabaseConnection.getInstance().getConnection()) {
@@ -33,7 +32,6 @@ public class AffectationDAO {
 
     // 2. Vérifier si l'étudiant a une demande active
     public boolean hasActiveReservation(int studentId) {
-        // CORRIGÉ : id_student au lieu de student_id
         String sql = "SELECT COUNT(*) FROM affectations WHERE id_student = ? AND status != 'REFUSE'";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -47,9 +45,11 @@ public class AffectationDAO {
     // 3. Récupérer toutes les demandes par statut
     public List<Affectation> getAllAffectationsByStatus(String status) {
         List<Affectation> list = new ArrayList<>();
-        String sql = "SELECT a.id, a.date_entree, a.date_sortie, s.nom, s.prenom, r.id_room, r.numero_room " +
+        // Assurez-vous que les alias SQL correspondent exactement à rs.getString("...")
+        String sql = "SELECT a.id, a.date_entree, a.date_sortie, u.nom_users, u.prenom_user, r.id_room, r.numero_room " +
                 "FROM affectations a " +
                 "JOIN students s ON a.id_student = s.id_student " +
+                "JOIN users u ON s.id_users = u.id_users " +
                 "JOIN rooms r ON a.room_id = r.id_room " +
                 "WHERE a.status = ?";
 
@@ -59,22 +59,23 @@ public class AffectationDAO {
             ps.setString(1, status);
             ResultSet rs = ps.executeQuery();
 
-            System.out.println("DEBUG : Requête exécutée pour le statut : " + status);
-
             while (rs.next()) {
+                System.out.println("DEBUG : Étudiant trouvé dans DB -> " + rs.getString("nom_users"));
                 Student s = new Student();
-                s.setNom(rs.getString("nom"));
-                s.setPrenom(rs.getString("prenom"));
+                // Ces noms DOIVENT correspondre aux alias du SQL (nom_users, prenom_user)
+                s.setNom(rs.getString("nom_users"));
+                s.setPrenom(rs.getString("prenom_user"));
 
                 Room r = new Room();
                 r.setIdRoom(rs.getInt("id_room"));
                 r.setNumeroRoom(rs.getString("numero_room"));
 
-                // Création de l'objet affectation avec les données récupérées
-                Affectation aff = new Affectation(rs.getInt("id"), s, r, rs.getString("date_entree"), rs.getString("date_sortie"));
+                Affectation aff = new Affectation(
+                        rs.getInt("id"), s, r,
+                        rs.getString("date_entree"),
+                        rs.getString("date_sortie")
+                );
                 list.add(aff);
-
-                System.out.println("DEBUG : Étudiant trouvé : " + s.getNom());
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,7 +100,6 @@ public class AffectationDAO {
 
     // 5. Utilitaires
     public Integer getLatestAffectationStudentId(int roomId) {
-        // CORRIGÉ : Sélection de id_student
         String sql = "SELECT id_student FROM affectations WHERE room_id = ? ORDER BY id DESC LIMIT 1";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -112,7 +112,6 @@ public class AffectationDAO {
     }
 
     public int getAffectationIdByStudent(int studentId) {
-        // CORRIGÉ : id_student au lieu de student_id
         String sql = "SELECT id FROM affectations WHERE id_student = ? AND status = 'EN_ATTENTE' LIMIT 1";
         try (Connection conn = DatabaseConnection.getInstance().getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
