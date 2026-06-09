@@ -2,21 +2,38 @@ package org.example.utils;
 
 import org.example.model.Student;
 
+/**
+ * Session — Gestion de la session utilisateur côté application.
+ *
+ * Cette classe stocke l'étudiant connecté de manière statique
+ * pour pouvoir le réutiliser depuis n'importe quel contrôleur.
+ */
 public class Session {
-    // Variable statique pour stocker l'étudiant connecté
+
+    // Étudiant actuellement connecté
     private static Student loggedInStudent;
 
-    // Méthode pour définir l'étudiant lors du login
+    /**
+     * Définit l'étudiant connecté dans la session.
+     *
+     * @param student instance de Student à stocker
+     */
     public static void setLoggedInStudent(Student student) {
         loggedInStudent = student;
     }
 
-    // Méthode pour récupérer l'étudiant partout dans l'application
+    /**
+     * Récupère l'étudiant connecté.
+     *
+     * @return Student connecté ou null si aucun
+     */
     public static Student getLoggedInStudent() {
         return loggedInStudent;
     }
 
-    // Méthode pour nettoyer la session lors de la déconnexion
+    /**
+     * Vide la session en supprimant l'étudiant connecté.
+     */
     public static void clear() {
         loggedInStudent = null;
     }

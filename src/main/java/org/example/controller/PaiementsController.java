@@ -51,6 +51,12 @@ public class PaiementsController {
     /** Champ date du paiement */
     @FXML private TextField datePaiementField;
 
+    /** Champ nom de l'étudiant */
+    @FXML private TextField studentNomField;
+
+    /** Champ prénom de l'étudiant */
+    @FXML private TextField studentPrenomField;
+
     /** Sélecteur de statut (ComboBox) */
     @FXML private ComboBox<String> statutCombo;
 
@@ -66,29 +72,18 @@ public class PaiementsController {
 
     @FXML private TableView<Payment>            tableTous;
     @FXML private TableColumn<Payment, String>  colId;
+    @FXML private TableColumn<Payment, String>  colStudentNom;
+    @FXML private TableColumn<Payment, String>  colStudentPrenom;
     @FXML private TableColumn<Payment, Double>  colMontant;
     @FXML private TableColumn<Payment, String>  colDate;
     @FXML private TableColumn<Payment, String>  colStatut;
-    @FXML private TableColumn<Payment, Double>  colPenalite;
     @FXML private TableColumn<Payment, Double>  colTotal;
-
-    // ════════════════════════════════════════════════════════════════════════
-    // TABLEAU 2 — Paiements en retard
-    // ════════════════════════════════════════════════════════════════════════
-
-    @FXML private TableView<Payment>            tableRetards;
-    @FXML private TableColumn<Payment, String>  colRetardId;
-    @FXML private TableColumn<Payment, Double>  colRetardMontant;
-    @FXML private TableColumn<Payment, String>  colRetardDate;
-    @FXML private TableColumn<Payment, Double>  colRetardPenalite;
-    @FXML private TableColumn<Payment, Double>  colRetardTotal;
 
     // ════════════════════════════════════════════════════════════════════════
     // STATISTIQUES — Labels en bas de l'écran
     // ════════════════════════════════════════════════════════════════════════
 
     @FXML private Label statTotalLabel;
-    @FXML private Label statRetardLabel;
     @FXML private Label statMontantLabel;
 
     // ════════════════════════════════════════════════════════════════════════
@@ -115,8 +110,7 @@ public class PaiementsController {
         // On remplit la liste déroulante avec les 3 statuts possibles
         statutCombo.setItems(FXCollections.observableArrayList(
                 Payment.STATUT_PAYE,
-                Payment.STATUT_EN_ATTENTE,
-                Payment.STATUT_RETARD
+                Payment.STATUT_EN_ATTENTE
         ));
         // Valeur par défaut
         statutCombo.setValue(Payment.STATUT_PAYE);
@@ -130,6 +124,12 @@ public class PaiementsController {
         colId.setCellValueFactory(
                 new PropertyValueFactory<>("idPayment")       // → getIdPayment()
         );
+        colStudentNom.setCellValueFactory(
+            new PropertyValueFactory<>("studentNom")       // → getStudentNom()
+        );
+        colStudentPrenom.setCellValueFactory(
+            new PropertyValueFactory<>("studentPrenom")    // → getStudentPrenom()
+        );
         colMontant.setCellValueFactory(
                 new PropertyValueFactory<>("montant")         // → getMontant()
         );
@@ -139,28 +139,8 @@ public class PaiementsController {
         colStatut.setCellValueFactory(
                 new PropertyValueFactory<>("statutPaiement")  // → getStatutPaiement()
         );
-        colPenalite.setCellValueFactory(
-                new PropertyValueFactory<>("penaliter")       // → getPenaliter()
-        );
         colTotal.setCellValueFactory(
                 new PropertyValueFactory<>("montantTotal")    // → getMontantTotal()
-        );
-
-        // ── Configuration colonnes Tableau 2 (retards) ────────────────────
-        colRetardId.setCellValueFactory(
-                new PropertyValueFactory<>("idPayment")
-        );
-        colRetardMontant.setCellValueFactory(
-                new PropertyValueFactory<>("montant")
-        );
-        colRetardDate.setCellValueFactory(
-                new PropertyValueFactory<>("datePaiement")
-        );
-        colRetardPenalite.setCellValueFactory(
-                new PropertyValueFactory<>("penaliter")
-        );
-        colRetardTotal.setCellValueFactory(
-                new PropertyValueFactory<>("montantTotal")
         );
 
         // ── Sélection ligne → remplir le formulaire ───────────────────────
@@ -175,7 +155,8 @@ public class PaiementsController {
                         montantField.setText(String.valueOf(newVal.getMontant()));
                         datePaiementField.setText(newVal.getDatePaiement());
                         statutCombo.setValue(newVal.getStatutPaiement());
-                        penaliteField.setText(String.valueOf(newVal.getPenaliter()));
+                        studentNomField.setText(newVal.getStudentNom());
+                        studentPrenomField.setText(newVal.getStudentPrenom());
                     }
                 });
 
@@ -197,28 +178,21 @@ public class PaiementsController {
         List<Payment> tous = dao.getAllPayments();
         tableTous.getItems().setAll(tous);
 
-        // ── Charger uniquement les retards ────────────────────────────────
-        List<Payment> retards = dao.getPaymentsEnRetard();
-        tableRetards.getItems().setAll(retards);
-
         // ── Mettre à jour les statistiques ───────────────────────────────
-        updateStats(tous, retards);
+        updateStats(tous);
     }
 
     // ════════════════════════════════════════════════════════════════════════
     // updateStats() — Met à jour les labels de statistiques en bas
     // ════════════════════════════════════════════════════════════════════════
-    private void updateStats(List<Payment> tous, List<Payment> retards) {
+    private void updateStats(List<Payment> tous) {
 
         // Nombre total de paiements
         statTotalLabel.setText("Total : " + tous.size() + " paiements");
 
-        // Nombre de retards
-        statRetardLabel.setText("En retard : " + retards.size());
-
         // Montant total collecté (somme des paiements PAYE)
         double totalCollecte = tous.stream()
-                .filter(Payment::isPaye)       // uniquement les PAYE
+                .filter(Payment::isPaye)
                 .mapToDouble(Payment::getMontant)
                 .sum();
         statMontantLabel.setText("Total collecté : " + totalCollecte + " €");
@@ -236,7 +210,9 @@ public class PaiementsController {
         // ── Validation des champs obligatoires ────────────────────────────
         if (idField.getText().isEmpty()           ||
                 montantField.getText().isEmpty()      ||
-                datePaiementField.getText().isEmpty()) {
+                datePaiementField.getText().isEmpty() ||
+                studentNomField.getText().isEmpty()   ||
+                studentPrenomField.getText().isEmpty()) {
 
             showMessage("⚠️ Remplissez tous les champs obligatoires", false);
             return;
@@ -249,9 +225,8 @@ public class PaiementsController {
                     Double.parseDouble(montantField.getText().trim()), // montant
                     datePaiementField.getText().trim(),    // date_paiement
                     statutCombo.getValue(),               // statut_paiement
-                    penaliteField.getText().isEmpty()
-                            ? 0.0
-                            : Double.parseDouble(penaliteField.getText().trim()) // penaliter
+                    0.0,                                  // penaliter
+                    0                                     // idStudent fixe à 0
             );
 
             // Insertion en base via le DAO
@@ -393,7 +368,8 @@ public class PaiementsController {
     private void clearFields() {
         montantField.clear();
         datePaiementField.clear();
-        penaliteField.clear();
+        studentNomField.clear();
+        studentPrenomField.clear();
         statutCombo.setValue(Payment.STATUT_PAYE);
         selectedPayment = null;
         // Génère un nouvel ID automatiquement

@@ -16,6 +16,15 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * LoginController — Contrôleur de l'écran de connexion.
+ *
+ * Ce contrôleur gère :
+ *   - l'analyse des champs de connexion,
+ *   - l'appel au service d'authentification,
+ *   - la redirection vers le dashboard admin ou étudiant,
+ *   - l'initialisation de la session étudiante.
+ */
 public class LoginController {
 
     @FXML private TextField usernameField;
@@ -64,8 +73,10 @@ public class LoginController {
     }
 
     /**
-     * Méthode à appeler lors du clic sur le bouton de déconnexion
-     * dans vos autres contrôleurs (ex: StudentController)
+     * Déconnexion de l'utilisateur courant.
+     *
+     * Nettoie l'utilisateur de l'AuthService et vide la session globale.
+     * Redirige ensuite vers l'écran de connexion.
      */
     public void handleLogout(ActionEvent event) {
         authService.logout(); // Nettoie le service et la Session

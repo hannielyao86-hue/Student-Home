@@ -1,0 +1,8 @@
+org.example
+org.example.config
+org.example.controller
+org.example.dao
+org.example.model
+org.example.service
+org.example.tests
+org.example.utils

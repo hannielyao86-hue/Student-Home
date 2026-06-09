@@ -199,6 +199,8 @@ CREATE TABLE IF NOT EXISTS `payments` (
     `statut_paiement` varchar(250) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
     `penaliter` decimal(15,2) NOT NULL,
     `id_student` int NOT NULL,
+    `student_nom` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT '',
+    `student_prenom` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL DEFAULT '',
     PRIMARY KEY (`id_payment`)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
@@ -206,8 +208,8 @@ CREATE TABLE IF NOT EXISTS `payments` (
 -- Déchargement des données de la table `payments`
 --
 
-INSERT INTO `payments` (`id_payment`, `montant`, `date_paiement`, `statut_paiement`, `penaliter`, `id_student`) VALUES
-    ('PAY001', 1000.00, '2026-05-10', 'PAYE', 0.00, 0);
+INSERT INTO `payments` (`id_payment`, `montant`, `date_paiement`, `statut_paiement`, `penaliter`, `id_student`, `student_nom`, `student_prenom`) VALUES
+    ('PAY001', 1000.00, '2026-05-10', 'PAYE', 0.00, 0, '', '');
 
 -- --------------------------------------------------------
 

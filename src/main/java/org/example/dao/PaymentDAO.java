@@ -48,8 +48,8 @@ public class PaymentDAO {
         // Toutes les colonnes réelles de la table payments
         String sql =
                 "INSERT INTO payments " +
-                        "(id_payment, montant, date_paiement, statut_paiement, penaliter) " +
-                        "VALUES (?, ?, ?, ?, ?)";
+                        "(id_payment, montant, date_paiement, statut_paiement, penaliter, id_student, student_nom, student_prenom) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
 
@@ -58,6 +58,9 @@ public class PaymentDAO {
             ps.setString(3, p.getDatePaiement());   // date_paiement
             ps.setString(4, p.getStatutPaiement()); // statut_paiement
             ps.setDouble(5, p.getPenaliter());      // penaliter
+            ps.setInt(6, p.getIdStudent());         // id_student
+            ps.setString(7, p.getStudentNom());     // student_nom
+            ps.setString(8, p.getStudentPrenom());  // student_prenom
 
             ps.executeUpdate();
 
@@ -82,7 +85,10 @@ public class PaymentDAO {
 
         List<Payment> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM payments ORDER BY date_paiement DESC";
+        // On joint la table students pour récupérer nom/prenom
+        String sql = "SELECT p.* " +
+                 "FROM payments p " +
+                 "ORDER BY date_paiement DESC";
 
         try (PreparedStatement ps = cnx.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -110,10 +116,12 @@ public class PaymentDAO {
 
         List<Payment> list = new ArrayList<>();
 
+        // Joindre students pour nom/prenom
         String sql =
-                "SELECT * FROM payments " +
-                        "WHERE statut_paiement = 'RETARD' " +
-                        "ORDER BY date_paiement ASC";
+            "SELECT p.* " +
+                "FROM payments p " +
+                "WHERE statut_paiement = 'RETARD' " +
+                "ORDER BY date_paiement ASC";
 
         try (PreparedStatement ps = cnx.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
@@ -139,7 +147,9 @@ public class PaymentDAO {
     // ════════════════════════════════════════════════════════════════════════
     public Payment findById(String idPayment) {
 
-        String sql = "SELECT * FROM payments WHERE id_payment = ?";
+        String sql = "SELECT p.* " +
+                     "FROM payments p " +
+                     "WHERE p.id_payment = ?";
 
         try (PreparedStatement ps = cnx.prepareStatement(sql)) {
 
@@ -328,7 +338,11 @@ public class PaymentDAO {
                 rs.getDouble("montant"),           // DECIMAL
                 rs.getString("date_paiement"),     // DATE
                 rs.getString("statut_paiement"),   // VARCHAR
-                rs.getDouble("penaliter")          // DECIMAL
+                rs.getDouble("penaliter"),         // DECIMAL
+                rs.getInt("id_student"),           // INT
+                // Nom / Prénom peuvent être null si pas de student lié
+                rs.getString("student_nom"),
+                rs.getString("student_prenom")
         );
     }
 }

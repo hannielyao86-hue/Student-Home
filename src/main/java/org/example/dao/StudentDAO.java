@@ -9,6 +9,15 @@ import java.util.List;
 import org.example.config.DatabaseConnection;
 import org.example.model.Student;
 
+/**
+ * StudentDAO — Data Access Object pour la table students.
+ *
+ * Contient toutes les opérations CRUD pour les étudiants :
+ *   - création d'un étudiant
+ *   - lecture de la liste ou d'un étudiant individuel
+ *   - mise à jour d'un étudiant
+ *   - suppression d'un étudiant
+ */
 public class StudentDAO {
 
     // ================= CONNEXION =================
@@ -18,6 +27,11 @@ public class StudentDAO {
 
     // ================= CREATE =================
 
+    /**
+     * Insère un nouvel étudiant dans la base de données.
+     *
+     * @param s étudiant à créer
+     */
     public void createStudent(Student s) {
 
         String sql = """
@@ -51,6 +65,11 @@ public class StudentDAO {
 
     // ================= READ ALL =================
 
+    /**
+     * Récupère tous les étudiants depuis la base de données.
+     *
+     * @return liste de tous les étudiants
+     */
     public List<Student> getAllStudents() {
 
         List<Student> list = new ArrayList<>();
@@ -102,6 +121,11 @@ public class StudentDAO {
 
     // ================= UPDATE =================
 
+    /**
+     * Met à jour un étudiant existant.
+     *
+     * @param s étudiant mis à jour
+     */
     public void updateStudent(Student s) {
 
         String sql = """
@@ -144,6 +168,11 @@ public class StudentDAO {
 
     // ================= DELETE =================
 
+    /**
+     * Supprime un étudiant par son identifiant.
+     *
+     * @param id identifiant de l'étudiant à supprimer
+     */
     public void deleteStudent(int id) {
 
         String sql = """
@@ -175,6 +204,11 @@ public class StudentDAO {
 
     // ================= COUNT =================
 
+    /**
+     * Compte le nombre total d'étudiants enregistrés.
+     *
+     * @return nombre d'étudiants
+     */
     public int countStudents() {
 
         String sql = """
@@ -202,6 +236,12 @@ public class StudentDAO {
 
     // ================= FIND BY ID =================
 
+    /**
+     * Récupère un étudiant par son identifiant.
+     *
+     * @param id identifiant de l'étudiant
+     * @return Student ou null si introuvable
+     */
     public Student getStudentById(int id) {
 
         String sql = """
@@ -248,6 +288,12 @@ public class StudentDAO {
         return null;
     }
 
+    /**
+     * Récupère un étudiant par l'identifiant utilisateur associé.
+     *
+     * @param idUsers identifiant de l'utilisateur
+     * @return Student ou null si introuvable
+     */
     public Student getStudentByUserId(int idUsers) {
         String sql = """
             SELECT * FROM students

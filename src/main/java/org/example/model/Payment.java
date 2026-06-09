@@ -56,6 +56,15 @@ public class Payment {
     /** Montant de la pénalité en cas de retard (0.0 si pas de retard) */
     private double penaliter;
 
+    /** Identifiant de l'étudiant lié à ce paiement */
+    private int idStudent;
+
+    /** Nom de l'étudiant qui a effectué le paiement */
+    private String studentNom;
+
+    /** Prénom de l'étudiant qui a effectué le paiement */
+    private String studentPrenom;
+
     // ════════════════════════════════════════════════════════════════════════
     // CONSTRUCTEUR COMPLET
     // ════════════════════════════════════════════════════════════════════════
@@ -73,13 +82,36 @@ public class Payment {
                    double montant,
                    String datePaiement,
                    String statutPaiement,
-                   double penaliter) {
+                   double penaliter,
+                   int idStudent,
+                   String studentNom,
+                   String studentPrenom) {
 
         this.idPayment      = idPayment;
         this.montant        = montant;
         this.datePaiement   = datePaiement;
         this.statutPaiement = statutPaiement;
         this.penaliter      = penaliter;
+        this.idStudent      = idStudent;
+        this.studentNom     = studentNom;
+        this.studentPrenom  = studentPrenom;
+    }
+
+    public Payment(String idPayment,
+                   double montant,
+                   String datePaiement,
+                   String statutPaiement,
+                   double penaliter,
+                   int idStudent) {
+        this(idPayment, montant, datePaiement, statutPaiement, penaliter, idStudent, "", "");
+    }
+
+    public Payment(String idPayment,
+                   double montant,
+                   String datePaiement,
+                   String statutPaiement,
+                   double penaliter) {
+        this(idPayment, montant, datePaiement, statutPaiement, penaliter, 0, "", "");
     }
 
     // ════════════════════════════════════════════════════════════════════════
@@ -91,6 +123,9 @@ public class Payment {
     public String getDatePaiement()   { return datePaiement; }
     public String getStatutPaiement() { return statutPaiement; }
     public double getPenaliter()      { return penaliter; }
+    public int getIdStudent()          { return idStudent; }
+    public String getStudentNom()      { return studentNom; }
+    public String getStudentPrenom()   { return studentPrenom; }
 
     // ════════════════════════════════════════════════════════════════════════
     // SETTERS
@@ -101,6 +136,9 @@ public class Payment {
     public void setDatePaiement(String datePaiement)   { this.datePaiement = datePaiement; }
     public void setStatutPaiement(String s)            { this.statutPaiement = s; }
     public void setPenaliter(double penaliter)         { this.penaliter = penaliter; }
+    public void setIdStudent(int idStudent)             { this.idStudent = idStudent; }
+    public void setStudentNom(String studentNom)         { this.studentNom = studentNom; }
+    public void setStudentPrenom(String studentPrenom)   { this.studentPrenom = studentPrenom; }
 
     // ════════════════════════════════════════════════════════════════════════
     // MÉTHODES UTILITAIRES
@@ -126,6 +164,7 @@ public class Payment {
                 ", date='"      + datePaiement   + "'" +
                 ", statut='"    + statutPaiement + "'" +
                 ", penalite="   + penaliter      +
+                ", idStudent="  + idStudent      +
                 "}";
     }
 }

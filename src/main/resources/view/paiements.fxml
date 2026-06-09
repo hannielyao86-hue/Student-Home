@@ -42,15 +42,6 @@
                            style="-fx-font-size: 11px; -fx-text-fill: white;"/>
                 </VBox>
                 <VBox alignment="CENTER" spacing="4"
-                      style="-fx-background-color: #e74c3c; -fx-background-radius: 10;
-                             -fx-padding: 12 25;">
-                    <Label fx:id="statRetardLabel" text="0"
-                           style="-fx-font-size: 28px; -fx-font-weight: bold;
-                                  -fx-text-fill: white;"/>
-                    <Label text="En retard"
-                           style="-fx-font-size: 11px; -fx-text-fill: white;"/>
-                </VBox>
-                <VBox alignment="CENTER" spacing="4"
                       style="-fx-background-color: #27ae60; -fx-background-radius: 10;
                              -fx-padding: 12 25;">
                     <Label fx:id="statMontantLabel" text="0 €"
@@ -70,10 +61,10 @@
                               -fx-text-fill: #2c3e50;"/>
                 <HBox spacing="12" alignment="CENTER_LEFT">
                     <VBox spacing="4">
-                        <Label text="ID Paiement"
+                        <Label text="ID Paiement (auto)"
                                style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
                         <TextField fx:id="idField" promptText="PAY001"
-                                   prefWidth="90"
+                                   prefWidth="90" editable="false"
                                    style="-fx-background-color: #ecf0f1;
                                           -fx-background-radius: 6; -fx-padding: 7;"/>
                     </VBox>
@@ -101,35 +92,37 @@
                         <ComboBox fx:id="statutCombo" prefWidth="130"/>
                     </VBox>
                     <VBox spacing="4">
-                        <Label text="Pénalité (€)"
+                        <Label text=" " style="-fx-font-size: 11px;"/>
+                        <HBox spacing="8">
+                            <Button text="✅ Payé" onAction="#marquerPaye"
+                                    style="-fx-background-color: #2980b9;
+                                           -fx-text-fill: white; -fx-background-radius: 6;
+                                           -fx-padding: 7 14; -fx-cursor: hand;"/>
+                            <Button text="➕ Ajouter" onAction="#addPayment"
+                                    style="-fx-background-color: #27ae60;
+                                           -fx-text-fill: white; -fx-background-radius: 6;
+                                           -fx-padding: 7 14; -fx-cursor: hand;"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+                <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+                    <VBox spacing="4">
+                        <Label text="Nom étudiant"
                                style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
-                        <TextField fx:id="penaliteField" promptText="0.00"
-                                   prefWidth="90"
+                        <TextField fx:id="studentNomField" promptText="Dupont"
+                                   prefWidth="160"
                                    style="-fx-background-radius: 6;
                                           -fx-border-color: #dee2e6;
                                           -fx-border-radius: 6; -fx-padding: 7;"/>
                     </VBox>
                     <VBox spacing="4">
-                        <Label text=" " style="-fx-font-size: 11px;"/>
-                        <HBox spacing="8">
-                            <Button text="➕ Ajouter" onAction="#addPayment"
-                                    style="-fx-background-color: #27ae60;
-                                           -fx-text-fill: white; -fx-font-weight: bold;
-                                           -fx-background-radius: 6; -fx-padding: 7 14;
-                                           -fx-cursor: hand;"/>
-                            <Button text="✅ Payé" onAction="#marquerPaye"
-                                    style="-fx-background-color: #2980b9;
-                                           -fx-text-fill: white; -fx-background-radius: 6;
-                                           -fx-padding: 7 14; -fx-cursor: hand;"/>
-                            <Button text="⚠️ Retard" onAction="#marquerRetard"
-                                    style="-fx-background-color: #e67e22;
-                                           -fx-text-fill: white; -fx-background-radius: 6;
-                                           -fx-padding: 7 14; -fx-cursor: hand;"/>
-                            <Button text="🗑" onAction="#deletePayment"
-                                    style="-fx-background-color: #e74c3c;
-                                           -fx-text-fill: white; -fx-background-radius: 6;
-                                           -fx-padding: 7 12; -fx-cursor: hand;"/>
-                        </HBox>
+                        <Label text="Prénom étudiant"
+                               style="-fx-font-size: 11px; -fx-text-fill: #7f8c8d;"/>
+                        <TextField fx:id="studentPrenomField" promptText="Marie"
+                                   prefWidth="160"
+                                   style="-fx-background-radius: 6;
+                                          -fx-border-color: #dee2e6;
+                                          -fx-border-radius: 6; -fx-padding: 7;"/>
                     </VBox>
                 </HBox>
                 <Label fx:id="messageLabel" text=""
@@ -147,12 +140,13 @@
             <Tab text="📋 Tous les paiements">
                 <TableView fx:id="tableTous">
                     <columns>
-                        <TableColumn fx:id="colId"       text="ID"          prefWidth="100"/>
-                        <TableColumn fx:id="colMontant"  text="Montant (€)" prefWidth="120"/>
-                        <TableColumn fx:id="colDate"     text="Date"        prefWidth="120"/>
-                        <TableColumn fx:id="colStatut"   text="Statut"      prefWidth="120"/>
-                        <TableColumn fx:id="colPenalite" text="Pénalité €"  prefWidth="110"/>
-                        <TableColumn fx:id="colTotal"    text="Total €"     prefWidth="110"/>
+                        <TableColumn fx:id="colId"        text="ID"            prefWidth="90"/>
+                        <TableColumn fx:id="colStudentNom" text="Nom"         prefWidth="130"/>
+                        <TableColumn fx:id="colStudentPrenom" text="Prénom"   prefWidth="130"/>
+                        <TableColumn fx:id="colMontant"   text="Montant (€)"  prefWidth="120"/>
+                        <TableColumn fx:id="colDate"      text="Date"         prefWidth="120"/>
+                        <TableColumn fx:id="colStatut"    text="Statut"       prefWidth="120"/>
+                        <TableColumn fx:id="colTotal"     text="Total €"      prefWidth="110"/>
                     </columns>
                     <placeholder>
                         <Label text="Aucun paiement enregistré"
@@ -161,21 +155,6 @@
                 </TableView>
             </Tab>
 
-            <Tab text="⚠️ Retards">
-                <TableView fx:id="tableRetards">
-                    <columns>
-                        <TableColumn fx:id="colRetardId"       text="ID"          prefWidth="100"/>
-                        <TableColumn fx:id="colRetardMontant"  text="Montant (€)" prefWidth="120"/>
-                        <TableColumn fx:id="colRetardDate"     text="Date"        prefWidth="120"/>
-                        <TableColumn fx:id="colRetardPenalite" text="Pénalité €"  prefWidth="110"/>
-                        <TableColumn fx:id="colRetardTotal"    text="Total dû €"  prefWidth="110"/>
-                    </columns>
-                    <placeholder>
-                        <Label text="Aucun retard 🎉"
-                               style="-fx-text-fill: #27ae60; -fx-font-size: 14px;"/>
-                    </placeholder>
-                </TableView>
-            </Tab>
 
         </TabPane>
     </center>

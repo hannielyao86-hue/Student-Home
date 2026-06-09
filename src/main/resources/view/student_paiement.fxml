@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.example.controller.StudentPaiementController"
+            prefWidth="800" prefHeight="600" style="-fx-padding:20; -fx-background-color: #f8fafc;">
+
+    <top>
+        <VBox spacing="6">
+            <Label text="Paiement" style="-fx-font-size:20; -fx-font-weight:bold;" />
+            <Label text="Effectuez votre paiement ici" style="-fx-text-fill:#475569;" />
+        </VBox>
+    </top>
+
+    <center>
+        <GridPane hgap="12" vgap="12" alignment="TOP_LEFT">
+            <columnConstraints>
+                <ColumnConstraints percentWidth="30" />
+                <ColumnConstraints percentWidth="70" />
+            </columnConstraints>
+
+            <Label text="Montant (€) :" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <TextField fx:id="amountField" promptText="Ex: 250.00" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+            <Label text="Nom du titulaire de la carte :" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <TextField fx:id="cardOwnerField" promptText="Nom du titulaire" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+            <Label text="N° Carte :" GridPane.rowIndex="2" GridPane.columnIndex="0" fx:id="cardNumberLabel" />
+            <TextField fx:id="cardNumberField" promptText="XXXX-XXXX-XXXX-XXXX" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+            <Label text="Date expiration :" GridPane.rowIndex="3" GridPane.columnIndex="0" fx:id="expiryLabel" />
+            <TextField fx:id="expiryField" promptText="MM/AA" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+            <Label text="CVV :" GridPane.rowIndex="4" GridPane.columnIndex="0" fx:id="cvvLabel" />
+            <PasswordField fx:id="cvvField" promptText="CVV" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+            <Label text="" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+            <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="6" GridPane.columnIndex="1">
+                <Button text="Annuler" onAction="#handleCancel" />
+                <Button text="Payer" fx:id="payButton" onAction="#handlePaymentSubmit" style="-fx-background-color:#10b981; -fx-text-fill:white;" />
+            </HBox>
+
+            <Label fx:id="statusLabel" textFill="#ef4444" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+        </GridPane>
+    </center>
+
+</BorderPane>
